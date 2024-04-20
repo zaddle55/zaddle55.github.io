@@ -1,0 +1,849 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Zaddle">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="引言 五子棋 (GoBang) 是一种典型的博弈游戏，而“博弈”一词的定义在《人工智能-一种现代方法》一书中的第五章《对抗搜索》中给出  有完备信息的，确定性的，轮流行动的，两个游戏者的零和游戏.  这种游戏可以通过生成博弈树来对下一步的最优行动进行预测，这也是构建五子棋对战AI的原理，而这种思路是通过 极小化极大算法(Minimax) 来实现的，接下来将介绍其原理与代码实现。[1] 极小化极大算">
+<meta property="og:type" content="article">
+<meta property="og:title" content="基于Minmax算法与Alpha-Beta剪枝的五子棋对战AI的Java代码实现">
+<meta property="og:url" content="http://example.com/2024/04/07/GobangAI-md/index.html">
+<meta property="og:site_name" content="南十字星站">
+<meta property="og:description" content="引言 五子棋 (GoBang) 是一种典型的博弈游戏，而“博弈”一词的定义在《人工智能-一种现代方法》一书中的第五章《对抗搜索》中给出  有完备信息的，确定性的，轮流行动的，两个游戏者的零和游戏.  这种游戏可以通过生成博弈树来对下一步的最优行动进行预测，这也是构建五子棋对战AI的原理，而这种思路是通过 极小化极大算法(Minimax) 来实现的，接下来将介绍其原理与代码实现。[1] 极小化极大算">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/105216073_p0.jpg">
+<meta property="article:published_time" content="2024-04-07T11:34:38.000Z">
+<meta property="article:modified_time" content="2024-04-20T08:37:11.505Z">
+<meta property="article:author" content="Zaddle">
+<meta property="article:tag" content="深度优先搜索">
+<meta property="article:tag" content="Alpha-Beta剪枝">
+<meta property="article:tag" content="Java">
+<meta property="article:tag" content="博弈论">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/105216073_p0.jpg">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>基于Minmax算法与Alpha-Beta剪枝的五子棋对战AI的Java代码实现 - 南十字星站</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/scroll.css">
+<link rel="stylesheet" href="/css/macpanel.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"example.com","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"❡"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  
+<meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong class="navbar-title">南十字星站</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('https://raw.githubusercontent.com/zaddle55/Picgo/main/images/56F33BB02CCB283AC36B4FB34DD29814.jpg') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.4)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="基于Minmax算法与Alpha-Beta剪枝的五子棋对战AI的Java代码实现"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2024-04-07 19:34" pubdate>
+          2024年4月7日 晚上
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          3.9k 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          33 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="算法拾遗"
+        id="heading-2ed560a98d75eb682c0ffe0a961f1843" role="tab" data-toggle="collapse" href="#collapse-2ed560a98d75eb682c0ffe0a961f1843"
+        aria-expanded="true"
+      >
+        算法拾遗
+        <span class="list-group-count">(1)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-2ed560a98d75eb682c0ffe0a961f1843"
+           role="tabpanel" aria-labelledby="heading-2ed560a98d75eb682c0ffe0a961f1843">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2024/04/07/GobangAI-md/" title="基于Minmax算法与Alpha-Beta剪枝的五子棋对战AI的Java代码实现"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">基于Minmax算法与Alpha-Beta剪枝的五子棋对战AI的Java代码实现</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">基于Minmax算法与Alpha-Beta剪枝的五子棋对战AI的Java代码实现</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2024年4月20日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <h2 id="引言">引言</h2>
+<p>五子棋 (GoBang) 是一种典型的<strong>博弈游戏</strong>，而“博弈”一词的定义在《人工智能-一种现代方法》一书中的第五章《对抗搜索》中给出</p>
+<blockquote>
+<p>有完备信息的，确定性的，轮流行动的，两个游戏者的零和游戏.</p>
+</blockquote>
+<p>这种游戏可以通过生成博弈树来对下一步的最优行动进行预测，这也是构建五子棋对战AI的原理，而这种思路是通过 <strong>极小化极大算法(Minimax)</strong> 来实现的，接下来将介绍其原理与代码实现。<sup id="fnref:1" class="footnote-ref"><a href="#fn:1" rel="footnote"><span class="hint--top hint--rounded" aria-label="本文主要参考自该GitHub Issue [javascript gobang AI，JS五子棋AI，源码+教程，基于Alpha-Beta剪枝算法（不是神经网络)](https://github.com/lihongxun945/gobang?tab=readme-ov-file)">[1]</span></a></sup></p>
+<h2 id="极小化极大算法-sup-id-fnref-2-class-footnote-ref-a-href-fn-2-rel-footnote-span-class-hint-top-hint-rounded-aria-label-Minimax算法解释与思路来源-Oi-wiki-https-oi-wiki-org-search-alpha-beta-2-span-a-sup">极小化极大算法<sup id="fnref:2" class="footnote-ref"><a href="#fn:2" rel="footnote"><span class="hint--top hint--rounded" aria-label="Minimax算法解释与思路来源 [Oi.wiki](https://oi-wiki.org/search/alpha-beta/)">[2]</span></a></sup></h2>
+<p>将五子棋的每个行动按后续双方可能的行动展开，可得到一个庞大的搜索树，如图所示</p>
+<div align="center">
+    <img src="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/20240407211255.png" srcset="/img/loading.gif" lazyload width="520px">
+    <img src="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/20240407211323.png" srcset="/img/loading.gif" lazyload width="300px">
+</div>
+<p>若以AI玩家的某一次落子前的棋盘状态为根节点，第一层(depth==1)子节点即为AI玩家落子后的可能棋盘状态，<br>
+第二层(depth==2)子节点即为人类玩家下一步落子后的可能棋盘状态……对每个子节点来说，其值(data)即为相对于AI玩家的棋盘状态评分。</p>
+<p>当从根节点开始搜索时，默认两玩家都发挥最佳水平，则需要遵从“AI玩家尽可能选择评分最大的路径，人类玩家尽可能选择评分最小的路径”，这样才能保证下一步的策略更加合理。<br>
+这就需要对两种层进行区分，在图上，标为MAX的正方形节点意味着要从其子节点中选择评分最大的一个，标MIN的圆形节点要从其子节点选择评分最小的一个。</p>
+<p>对于这种问题，就可以利用深度优先搜索 (DPS) 的思路来逐步构筑代码：初始条件 (递归到最深层节点) 直接返回该节点评分值，当前节点为MAX节点返回子节点最大值，当前节点为MIN节点返回节点最小值，直到回溯至根节点结束。</p>
+<p><img src="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/20240407213716.png" srcset="/img/loading.gif" lazyload alt="Minimax算法图像化"></p>
+<p>伪代码实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><code class="hljs pseudo">int minimax(int depth, bool is_max) &#123;<br>    int res;<br>  if (!son_num[depth]) return val(curState); // 搜索到无子节点返回当前评分<br>  if (is_max) &#123; // 当前为MAX节点，返回子节点最大值<br>    for (int i = 0; i &lt; son_num[depth]; ++i) &#123;<br>      res = max(res, minimax(depth + 1, is_max ^ 1));<br>    &#125;<br>    return res;<br>  &#125; else &#123; // 当前为MIN节点，返回子节点最小值<br>    for (int i = 0; i &lt; son_num[depth]; ++i) &#123;<br>      res = min(res, minimax(depth + 1, is_max ^ 1));<br>    &#125;<br>    return res;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<p>然而从上面的代码可以看出来，我们需要解决几个问题：</p>
+<ul>
+<li>子节点状态sonState的生成</li>
+<li>节点状态的评估函数evaluate()的实现</li>
+<li>搜索过于庞大，假设每层节点有10个子节点，当搜索深度为4时就会搜索 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><msup><mn>0</mn><mn>4</mn></msup><mo>=</mo><mn>10000</mn></mrow><annotation encoding="application/x-tex">10^4 = 10000</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8141em;"></span><span class="mord">1</span><span class="mord"><span class="mord">0</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">4</span></span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">10000</span></span></span></span>次，每次都要建立一个新的<span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>15</mn><mo>×</mo><mn>15</mn></mrow><annotation encoding="application/x-tex">15 \times 15</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">15</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">15</span></span></span></span>大小的二维数组，这个算法的空间复杂度将会达到 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>O</mi><mo stretchy="false">(</mo><msup><mn>2</mn><mi>n</mi></msup><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">O(2^n)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">O</span><span class="mopen">(</span><span class="mord"><span class="mord">2</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">n</span></span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> ，因此适当的优化(即剪去不必要的分枝)是亟需的</li>
+</ul>
+<h2 id="生成函数generate-的实现">生成函数generate()的实现</h2>
+<p>进行搜索前必须生成每一个节点的棋盘状态，即下一步每一个可能的走法，对于五子棋我们倾向于开局落子在中心位置，且距离棋盘上已有棋子位置的过远处(5个位置以外)的落子并没有太大价值，根据此便可构建generate()方法，伪代码实现如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><code class="hljs pseudo">int[][] generate() &#123;<br>  if (isEmpty(board)) &#123;<br>    return &#123;&#123;7,7&#125;&#125;<br>  &#125;<br>  int[][] res;<br>  for (int i = 0; i &lt; ROW; i++) &#123;<br>    for (int j = 0; j &lt; COL; j++&gt;) &#123;<br>      if (isChessNear) &#123;<br>        res.add(&#123;i, j&#125;)<br>      &#125;<br>     &#125;<br>  &#125;<br>  return res<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="评估函数evaluate-的实现">评估函数evaluate()的实现</h2>
+<h2 id="对DFS的优化——Alpha-Beta剪枝算法-sup-id-fnref-4-class-footnote-ref-a-href-fn-4-rel-footnote-span-class-hint-top-hint-rounded-aria-label-依然参考自-Oi-wiki-https-oi-wiki-org-search-alpha-beta-4-span-a-sup">对DFS的优化——Alpha-Beta剪枝算法<sup id="fnref:4" class="footnote-ref"><a href="#fn:4" rel="footnote"><span class="hint--top hint--rounded" aria-label="依然参考自 [Oi.wiki](https://oi-wiki.org/search/alpha-beta/)">[4]</span></a></sup></h2>
+<p>当搜索树过于复杂且包含极值约束时，可以用Alpha-Beta算法剪去不可能的路径上的分支，现在结合某一局势解释其原理：</p>
+<p><img src="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/20240420161313.png" srcset="/img/loading.gif" lazyload alt="搜索树及其根节点"></p>
+<p><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi></mrow><annotation encoding="application/x-tex">\alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi></mrow><annotation encoding="application/x-tex">\beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span></span></span></span> 分别作为搜索过程中结果的最大下界和最小上界的记录值，若已知某节点的部分子节点的分数，虽然不能算出该节点的分数，但可以算出该节点的分数的取值范围。同时，利用该节点的分数的取值范围，在搜索其子节点时，如果已经确定没有更好的走法，就不必再搜索剩余的子节点了。在具体实现时，即 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mi>β</mi></mrow><annotation encoding="application/x-tex">\alpha \beta</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span></span></span></span> 说明该节点可以剪枝。</p>
+<p><img src="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/20240420162027.png" srcset="/img/loading.gif" lazyload alt="开始搜索"></p>
+<p>初始时 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mo>−</mo><mi mathvariant="normal">∞</mi><mo separator="true">,</mo><mi>β</mi><mo>=</mo><mo>+</mo><mi mathvariant="normal">∞</mi></mrow><annotation encoding="application/x-tex">\alpha = - \infty, \beta = + \infty</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord">−</span><span class="mord">∞</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord">+</span><span class="mord">∞</span></span></span></span> ,当搜索至根节点时，由于其父节点为MIN类型，故更新 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\beta = 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span>，同时A节点值返回为3。</p>
+<p><img src="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/20240420162423.png" srcset="/img/loading.gif" lazyload alt="更新α, β值"></p>
+<p>继续向上返回时，由于父节点变为MAX类型，更新 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>α</mi><mo>=</mo><mn>3</mn></mrow><annotation encoding="application/x-tex">\alpha = 3</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">3</span></span></span></span>, 向下搜索至C节点。</p>
+<p><img src="https://raw.githubusercontent.com/zaddle55/Picgo/main/images/20240420162653.png" srcset="/img/loading.gif" lazyload alt="出现可剪枝节点"></p>
+<p>这时根节点最小值为2，更新 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>=</mo><mn>2</mn></mrow><annotation encoding="application/x-tex">\beta = 2</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span></span></span></span>, 发现 <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>β</mi><mo>&lt;</mo><mi>α</mi></mrow><annotation encoding="application/x-tex">\beta &lt; \alpha</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8889em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.05278em;">β</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.0037em;">α</span></span></span></span>，说明节点C不会有更好的走法，故不再搜索其子节点并直接返回结果为2。</p>
+<p>将Alpha-beta剪枝加入Minimax搜索中，伪代码实现如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br></pre></td><td class="code"><pre><code class="hljs pseudo">int alpha_beta(int u, int alph, int beta, bool is_max) &#123;<br>  if (!son_num[u]) return val[u];<br>  if (is_max) &#123;<br>    for (int i = 0; i &lt; son_num[u]; ++i) &#123;<br>      int d = son[u][i];<br>      alph = max(alph, alpha_beta(d, alph, beta, is_max ^ 1));<br>      if (alph &gt;= beta) break;<br>    &#125;<br>    return alph;<br>  &#125; else &#123;<br>    for (int i = 0; i &lt; son_num[u]; ++i) &#123;<br>      int d = son[u][i];<br>      beta = min(beta, alpha_beta(d, alph, beta, is_max ^ 1));<br>      if (alph &gt;= beta) break;<br>    &#125;<br>    return beta;<br>  &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+<h2 id="附">附</h2>
+<p>最后贴上我的Java源码</p>
+
+    <div class="fold">
+      <div class="fold-title fold-info collapsed" data-toggle="collapse" href="#collapse-9c51fa20" role="button" aria-expanded="false" aria-controls="collapse-9c51fa20">
+        <div class="fold-arrow">▶</div>Board.java
+      </div>
+      <div class="fold-collapse collapse" id="collapse-9c51fa20">
+        <div class="fold-content">
+          <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.LinkedList;<br><span class="hljs-keyword">import</span> java.util.List;<br><span class="hljs-keyword">import</span> java.util.ArrayList;<br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">Board</span> &#123;<br><span class="hljs-comment">// 通过name和id来创建一个棋盘</span><br>    <span class="hljs-keyword">public</span> String name;<br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> id;<br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Board</span><span class="hljs-params">(String name, <span class="hljs-type">int</span> id)</span>&#123;<br>        <span class="hljs-built_in">this</span>.name = name;<br>        <span class="hljs-built_in">this</span>.id = id;<br>    &#125;<br>    <span class="hljs-comment">// 设置黑棋为1，白棋为2，空为0</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">BLACK</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">WHITE</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">EMPTY</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">INROW</span> <span class="hljs-operator">=</span> <span class="hljs-number">5</span>;<br><br>    <span class="hljs-comment">// 设置棋盘</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">int</span>[][] board = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[<span class="hljs-number">15</span>][<span class="hljs-number">15</span>];<br>    <span class="hljs-comment">// 通过一个二维数组来创建一个棋盘</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-title function_">Board</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] initBoard)</span>&#123;<br>        copyBoard(initBoard, board);<br>    &#125;<br>    <br>    <span class="hljs-comment">// 初始化状态队列</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-type">Deque</span> <span class="hljs-variable">status</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Deque</span>();<br>    <span class="hljs-comment">// 状态加入队尾</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">pushStatus</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] board)</span>&#123;<br>        <span class="hljs-type">int</span> [][] copy = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[<span class="hljs-number">15</span>][<span class="hljs-number">15</span>];<br>        copyBoard(board, copy);<br>        status.pushRear(copy);<br>    &#125;<br>    <span class="hljs-comment">// 状态出队尾</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[][] popStatus()&#123;<br>        <span class="hljs-keyword">return</span> status.popRear();<br>    &#125;<br><br>    <span class="hljs-comment">// 获取棋盘</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[][] getBoard()&#123;<br>        <span class="hljs-keyword">return</span> board;<br>    &#125;<br>    <span class="hljs-comment">// 判断并进行落子</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">putChess</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, <span class="hljs-type">int</span> color)</span>&#123;<br>        <span class="hljs-keyword">if</span> (x &gt;=<span class="hljs-number">0</span> &amp;&amp; x &lt; board[<span class="hljs-number">0</span>].length &amp;&amp; y &gt;= <span class="hljs-number">0</span> &amp;&amp; y &lt; board.length &amp;&amp; board[x][y] == EMPTY)&#123;<br>            <span class="hljs-keyword">if</span> (color == <span class="hljs-number">1</span>)&#123;<br>                board[x][y] = BLACK;<br>            &#125;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (color == <span class="hljs-number">2</span>)&#123;<br>                board[x][y] = WHITE;<br>            &#125;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 移除指定位置的棋子</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">removeChess</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span>&#123;<br>        board[x][y] = EMPTY;<br>    &#125;<br><br>    <span class="hljs-comment">// 获取指定位置的棋子</span><br>    <span class="hljs-keyword">public</span> String <span class="hljs-title function_">getChess</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span> <span class="hljs-keyword">throws</span> Exception&#123;<br>        <span class="hljs-keyword">if</span> (board[x][y] == BLACK)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;BLACK&quot;</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (board[x][y] == WHITE)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;WHITE&quot;</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-string">&quot;EMPTY&quot;</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 判断棋盘是否已满</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isFull</span><span class="hljs-params">()</span>&#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">15</span>; i++)&#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">15</span>; j++)&#123;<br>                <span class="hljs-keyword">if</span> (board[i][j] == EMPTY)&#123;<br>                    <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>    &#125;<br><br>    <span class="hljs-comment">// 根据棋面判断是否有一方胜利</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isWin</span><span class="hljs-params">(<span class="hljs-type">int</span> color)</span>&#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">15</span>; i++)&#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">15</span>; j++)&#123;<br>                <span class="hljs-keyword">if</span> (board[i][j] == color)&#123;<br>                    <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.judgeWin(i, j) != <span class="hljs-number">0</span>)&#123;<br>                        <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>                    &#125;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>    <span class="hljs-comment">// 根据最后一步判断是否有一方胜利, 1为黑棋胜利，2为白棋胜利，0为未分胜负</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">int</span> <span class="hljs-title function_">judgeWin</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span>&#123;<br>        <span class="hljs-keyword">if</span> (<span class="hljs-built_in">this</span>.judgeRow(x, y) || <span class="hljs-built_in">this</span>.judgeCol(x, y) || <span class="hljs-built_in">this</span>.judgeLeftDiagonal(x, y) || <span class="hljs-built_in">this</span>.judgeRightDiagonal(x, y))&#123;<br>            <span class="hljs-keyword">if</span> (board[x][y] == BLACK)&#123;<br>                <span class="hljs-keyword">return</span> BLACK;<br>            &#125;<br>            <span class="hljs-keyword">else</span> <span class="hljs-keyword">if</span> (board[x][y] == WHITE)&#123;<br>                <span class="hljs-keyword">return</span> WHITE;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> EMPTY;<br>    &#125;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">    *判断当前列内是否有五子相连</span><br><span class="hljs-comment">    @param x 当前横坐标</span><br><span class="hljs-comment">    @param y 当前纵坐标</span><br><span class="hljs-comment">    @return boolean</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">judgeCol</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span>&#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">color</span> <span class="hljs-operator">=</span> board[x][y];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--)&#123;<br>            <span class="hljs-keyword">if</span> (board[i][y] == color)&#123;<br>                count++;<br>            &#125;<br>            <span class="hljs-keyword">else</span>&#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x + <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">15</span>; i++)&#123;<br>            <span class="hljs-keyword">if</span> (board[i][y] == color)&#123;<br>                count++;<br>            &#125;<br>            <span class="hljs-keyword">else</span>&#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (count &gt;= INROW)&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125;<br>        <span class="hljs-keyword">else</span>&#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">    *判断当前行内是否有五子相连</span><br><span class="hljs-comment">    * @param x 当前横坐标</span><br><span class="hljs-comment">    * @param y 当前纵坐标</span><br><span class="hljs-comment">    * @return boolean</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">judgeRow</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">color</span> <span class="hljs-operator">=</span> board[x][y];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> y - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span>; i--) &#123;<br>            <span class="hljs-keyword">if</span> (board[x][i] == color) &#123;<br>                count++;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> y + <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">15</span>; i++) &#123;<br>            <span class="hljs-keyword">if</span> (board[x][i] == color) &#123;<br>                count++;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (count &gt;= INROW) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">        *判断当前左斜对角线内是否有五子相连</span><br><span class="hljs-comment">        * @param x 当前横坐标</span><br><span class="hljs-comment">        * @param y 当前纵坐标</span><br><span class="hljs-comment">        * @return boolean</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">judgeLeftDiagonal</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span> &#123;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>            <span class="hljs-type">int</span> <span class="hljs-variable">color</span> <span class="hljs-operator">=</span> board[x][y];<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x - <span class="hljs-number">1</span>, j = y - <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span> &amp;&amp; j &gt;= <span class="hljs-number">0</span>; i--, j--) &#123;<br>                <span class="hljs-keyword">if</span> (board[i][j] == color) &#123;<br>                    count++;<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-keyword">break</span>;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x + <span class="hljs-number">1</span>, j = y + <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">15</span> &amp;&amp; j &lt; <span class="hljs-number">15</span>; i++, j++) &#123;<br>                <span class="hljs-keyword">if</span> (board[i][j] == color) &#123;<br>                    count++;<br>                &#125; <span class="hljs-keyword">else</span> &#123;<br>                    <span class="hljs-keyword">break</span>;<br>                &#125;<br>            &#125;<br>            <span class="hljs-keyword">if</span> (count &gt;= INROW) &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">        *判断当前右斜对角线内是否有五子相连</span><br><span class="hljs-comment">        * @param x 当前横坐标</span><br><span class="hljs-comment">        * @param y 当前纵坐标</span><br><span class="hljs-comment">        * @return boolean</span><br><span class="hljs-comment">         */</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">judgeRightDiagonal</span><span class="hljs-params">(<span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">count</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">color</span> <span class="hljs-operator">=</span> board[x][y];<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x - <span class="hljs-number">1</span>, j = y + <span class="hljs-number">1</span>; i &gt;= <span class="hljs-number">0</span> &amp;&amp; j &lt; <span class="hljs-number">15</span>; i--, j++) &#123;<br>            <span class="hljs-keyword">if</span> (board[i][j] == color) &#123;<br>                count++;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x + <span class="hljs-number">1</span>, j = y - <span class="hljs-number">1</span>; i &lt; <span class="hljs-number">15</span> &amp;&amp; j &gt;= <span class="hljs-number">0</span>; i++, j--) &#123;<br>            <span class="hljs-keyword">if</span> (board[i][j] == color) &#123;<br>                count++;<br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">break</span>;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">if</span> (count &gt;= INROW) &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br>            <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 继承LinkedList类，实现双端队列，储存棋盘状态</span><br>    <span class="hljs-keyword">class</span> <span class="hljs-title class_">Deque</span> <span class="hljs-keyword">extends</span> <span class="hljs-title class_">LinkedList</span>&lt;<span class="hljs-type">int</span>[][]&gt;&#123;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">pushRear</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] board)</span> &#123;<br>            addLast(board);<br>        &#125;<br>        <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[][] popRear() &#123;<br>            <span class="hljs-keyword">return</span> removeLast();<br>        &#125;<br>        <span class="hljs-keyword">public</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">pushFront</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] board)</span> &#123;<br>            addFirst(board);<br>        &#125;<br>        <span class="hljs-keyword">public</span> <span class="hljs-type">int</span>[][] popFront() &#123;<br>            <span class="hljs-keyword">return</span> removeFirst();<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 复制棋盘防止引用传递</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">copyBoard</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] srcboard, <span class="hljs-type">int</span>[][] dstBoard)</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; srcboard.length; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; srcboard[i].length; j++) &#123;<br>                dstBoard[i][j] = srcboard[i][j];<br>            &#125;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-comment">// 得到当前棋盘的所有合法走法</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> List&lt;<span class="hljs-type">int</span>[]&gt; getValidMoves(<span class="hljs-type">int</span>[][] board)&#123;<br>        List&lt;<span class="hljs-type">int</span>[]&gt; resList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;<span class="hljs-type">int</span>[]&gt;();<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; <span class="hljs-number">15</span>; i++)&#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; <span class="hljs-number">15</span>; j++)&#123;<br>                <span class="hljs-keyword">if</span> (board[i][j] == EMPTY &amp;&amp; isAround(board, i, j))&#123;<br>                    resList.add(<span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[]&#123;i, j&#125;);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> resList;<br>    &#125;<br><br>    <span class="hljs-comment">// 搜索指定点位距离为5范围内是否有棋子</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">boolean</span> <span class="hljs-title function_">isAround</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] board, <span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y)</span>&#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x - <span class="hljs-number">3</span>; i &lt;= x + <span class="hljs-number">3</span>; i++)&#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> y - <span class="hljs-number">3</span>; j &lt;= y + <span class="hljs-number">3</span>; j++)&#123;<br>                <span class="hljs-keyword">if</span> (i &gt;= <span class="hljs-number">0</span> &amp;&amp; i &lt; <span class="hljs-number">15</span> &amp;&amp; j &gt;= <span class="hljs-number">0</span> &amp;&amp; j &lt; <span class="hljs-number">15</span> &amp;&amp; board[i][j] != EMPTY)&#123;<br>                    <span class="hljs-keyword">return</span> <span class="hljs-literal">true</span>;<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> <span class="hljs-literal">false</span>;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+        </div>
+      </div>
+    </div>
+
+    <div class="fold">
+      <div class="fold-title fold-info collapsed" data-toggle="collapse" href="#collapse-05eef982" role="button" aria-expanded="false" aria-controls="collapse-05eef982">
+        <div class="fold-arrow">▶</div>CompeteAI.java
+      </div>
+      <div class="fold-collapse collapse" id="collapse-05eef982">
+        <div class="fold-content">
+          <figure class="highlight java"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br><span class="line">68</span><br><span class="line">69</span><br><span class="line">70</span><br><span class="line">71</span><br><span class="line">72</span><br><span class="line">73</span><br><span class="line">74</span><br><span class="line">75</span><br><span class="line">76</span><br><span class="line">77</span><br><span class="line">78</span><br><span class="line">79</span><br><span class="line">80</span><br><span class="line">81</span><br><span class="line">82</span><br><span class="line">83</span><br><span class="line">84</span><br><span class="line">85</span><br><span class="line">86</span><br><span class="line">87</span><br><span class="line">88</span><br><span class="line">89</span><br><span class="line">90</span><br><span class="line">91</span><br><span class="line">92</span><br><span class="line">93</span><br><span class="line">94</span><br><span class="line">95</span><br><span class="line">96</span><br><span class="line">97</span><br><span class="line">98</span><br><span class="line">99</span><br><span class="line">100</span><br><span class="line">101</span><br><span class="line">102</span><br><span class="line">103</span><br><span class="line">104</span><br><span class="line">105</span><br><span class="line">106</span><br><span class="line">107</span><br><span class="line">108</span><br><span class="line">109</span><br><span class="line">110</span><br><span class="line">111</span><br><span class="line">112</span><br><span class="line">113</span><br><span class="line">114</span><br><span class="line">115</span><br><span class="line">116</span><br><span class="line">117</span><br><span class="line">118</span><br><span class="line">119</span><br><span class="line">120</span><br><span class="line">121</span><br><span class="line">122</span><br><span class="line">123</span><br><span class="line">124</span><br><span class="line">125</span><br><span class="line">126</span><br><span class="line">127</span><br><span class="line">128</span><br><span class="line">129</span><br><span class="line">130</span><br><span class="line">131</span><br><span class="line">132</span><br><span class="line">133</span><br><span class="line">134</span><br><span class="line">135</span><br><span class="line">136</span><br><span class="line">137</span><br><span class="line">138</span><br><span class="line">139</span><br><span class="line">140</span><br><span class="line">141</span><br><span class="line">142</span><br><span class="line">143</span><br><span class="line">144</span><br><span class="line">145</span><br><span class="line">146</span><br><span class="line">147</span><br><span class="line">148</span><br><span class="line">149</span><br><span class="line">150</span><br><span class="line">151</span><br><span class="line">152</span><br><span class="line">153</span><br><span class="line">154</span><br><span class="line">155</span><br><span class="line">156</span><br><span class="line">157</span><br><span class="line">158</span><br><span class="line">159</span><br><span class="line">160</span><br><span class="line">161</span><br><span class="line">162</span><br><span class="line">163</span><br><span class="line">164</span><br><span class="line">165</span><br><span class="line">166</span><br><span class="line">167</span><br><span class="line">168</span><br><span class="line">169</span><br><span class="line">170</span><br><span class="line">171</span><br><span class="line">172</span><br><span class="line">173</span><br><span class="line">174</span><br><span class="line">175</span><br><span class="line">176</span><br><span class="line">177</span><br><span class="line">178</span><br><span class="line">179</span><br><span class="line">180</span><br><span class="line">181</span><br><span class="line">182</span><br><span class="line">183</span><br><span class="line">184</span><br><span class="line">185</span><br><span class="line">186</span><br><span class="line">187</span><br><span class="line">188</span><br><span class="line">189</span><br><span class="line">190</span><br><span class="line">191</span><br><span class="line">192</span><br><span class="line">193</span><br><span class="line">194</span><br><span class="line">195</span><br><span class="line">196</span><br><span class="line">197</span><br><span class="line">198</span><br><span class="line">199</span><br><span class="line">200</span><br><span class="line">201</span><br><span class="line">202</span><br><span class="line">203</span><br><span class="line">204</span><br><span class="line">205</span><br><span class="line">206</span><br><span class="line">207</span><br><span class="line">208</span><br><span class="line">209</span><br><span class="line">210</span><br><span class="line">211</span><br><span class="line">212</span><br><span class="line">213</span><br><span class="line">214</span><br><span class="line">215</span><br><span class="line">216</span><br><span class="line">217</span><br><span class="line">218</span><br><span class="line">219</span><br><span class="line">220</span><br><span class="line">221</span><br><span class="line">222</span><br><span class="line">223</span><br><span class="line">224</span><br><span class="line">225</span><br><span class="line">226</span><br><span class="line">227</span><br><span class="line">228</span><br><span class="line">229</span><br><span class="line">230</span><br><span class="line">231</span><br><span class="line">232</span><br><span class="line">233</span><br><span class="line">234</span><br><span class="line">235</span><br><span class="line">236</span><br><span class="line">237</span><br><span class="line">238</span><br><span class="line">239</span><br><span class="line">240</span><br><span class="line">241</span><br><span class="line">242</span><br><span class="line">243</span><br><span class="line">244</span><br><span class="line">245</span><br><span class="line">246</span><br><span class="line">247</span><br><span class="line">248</span><br><span class="line">249</span><br><span class="line">250</span><br><span class="line">251</span><br><span class="line">252</span><br><span class="line">253</span><br><span class="line">254</span><br><span class="line">255</span><br><span class="line">256</span><br><span class="line">257</span><br><span class="line">258</span><br><span class="line">259</span><br><span class="line">260</span><br><span class="line">261</span><br><span class="line">262</span><br><span class="line">263</span><br><span class="line">264</span><br><span class="line">265</span><br><span class="line">266</span><br><span class="line">267</span><br><span class="line">268</span><br><span class="line">269</span><br><span class="line">270</span><br><span class="line">271</span><br><span class="line">272</span><br><span class="line">273</span><br><span class="line">274</span><br><span class="line">275</span><br><span class="line">276</span><br><span class="line">277</span><br><span class="line">278</span><br><span class="line">279</span><br><span class="line">280</span><br><span class="line">281</span><br><span class="line">282</span><br><span class="line">283</span><br><span class="line">284</span><br></pre></td><td class="code"><pre><code class="hljs java"><span class="hljs-keyword">import</span> java.util.regex.Pattern;<br><span class="hljs-keyword">import</span> java.util.regex.Matcher;<br><span class="hljs-keyword">import</span> java.util.ArrayList;<br><span class="hljs-keyword">import</span> java.util.List;<br><br><br><span class="hljs-keyword">public</span> <span class="hljs-keyword">class</span> <span class="hljs-title class_">CompeteAI</span> &#123;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">ROW</span> <span class="hljs-operator">=</span> <span class="hljs-number">15</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">COL</span> <span class="hljs-operator">=</span> <span class="hljs-number">15</span>;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">MAX_NODE</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br>    <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">int</span> <span class="hljs-variable">MIN_NODE</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <br>    <span class="hljs-comment">// 定义best数组各对象的索引偏移量</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">bestScore</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">bestX</span> <span class="hljs-operator">=</span> <span class="hljs-number">1</span>;<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-variable">bestY</span> <span class="hljs-operator">=</span> <span class="hljs-number">2</span>;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span>[] miniMaxSearch(<span class="hljs-type">int</span> curDepth, <span class="hljs-type">int</span> depth, <span class="hljs-type">int</span>[][] board, <span class="hljs-type">int</span> alpha, <span class="hljs-type">int</span> beta, <span class="hljs-type">int</span> role) &#123; <span class="hljs-comment">//role == 1 执白棋 || role == 0 执黑棋</span><br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">        * 初始化最佳数组，储存最佳的落子位置与分数</span><br><span class="hljs-comment">        * 0 -&gt; bestScore, 1 -&gt; bestX, 2 -&gt; bestY </span><br><span class="hljs-comment">        */</span> <br>        <span class="hljs-type">int</span>[] best = <span class="hljs-keyword">new</span> <span class="hljs-title class_">int</span>[<span class="hljs-number">3</span>];<br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * 初始化Board类，用于调用isWin函数</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-type">Board</span> <span class="hljs-variable">Board</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Board</span>(board);<br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * 初始化三个ArrayList，分别用于存储当前局面的所有可能走法(int[][])、走法数组(int[])评估值(int)</span><br><span class="hljs-comment">         */</span><br>        List&lt;<span class="hljs-type">int</span>[][]&gt; childBoardList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;<span class="hljs-type">int</span>[][]&gt;();<br>        List&lt;<span class="hljs-type">int</span>[]&gt; dirList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;<span class="hljs-type">int</span>[]&gt;();<br>        List&lt;Integer&gt; scoreList = <span class="hljs-keyword">new</span> <span class="hljs-title class_">ArrayList</span>&lt;Integer&gt;();<br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * 调用generateStep方法，返回该步所有可能的走法</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[] step : Board.getValidMoves(Board.getBoard())) &#123;<br>            <span class="hljs-type">Board</span> <span class="hljs-variable">childBoard</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Board</span>(board);<br>            dirList.add(step);<br>            childBoard.putChess(step[<span class="hljs-number">0</span>], step[<span class="hljs-number">1</span>], role + <span class="hljs-number">1</span>);<br>            childBoardList.add(childBoard.getBoard());<br>        &#125;<br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * 当搜索到叶子节点或有一方胜利时，返回评估值</span><br><span class="hljs-comment">         * 评估值为当前局面的分数</span><br><span class="hljs-comment">         * 当正在执行搜索且子节点未被剪枝时，进行Func递归</span><br><span class="hljs-comment">         * curDepth++表示向下层搜索，childBoard表示以该子</span><br><span class="hljs-comment">         * 节点棋盘状态重新迭代，role ^ 1 表示棋色反转</span><br><span class="hljs-comment">         * 同时alpha、beta值向下传递以更新</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">if</span> (curDepth == depth || Board.isWin((role ^ <span class="hljs-number">1</span>) + <span class="hljs-number">1</span>)) &#123;<br>            best[<span class="hljs-number">0</span>] = evaluate(board, role ^ <span class="hljs-number">1</span>);<br>            <span class="hljs-keyword">return</span> best;<br>        &#125; <span class="hljs-keyword">else</span> &#123;<br><br>            <span class="hljs-comment">// 当前节点为MAX节点时</span><br>            <span class="hljs-keyword">if</span> (curDepth % <span class="hljs-number">2</span> == <span class="hljs-number">0</span>) &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[][] childBoard : childBoardList) &#123;<br>                    <span class="hljs-type">int</span>[] res = miniMaxSearch(curDepth + <span class="hljs-number">1</span>, depth, childBoard, alpha, beta, role ^ <span class="hljs-number">1</span>);<br>                    scoreList.add(res[bestScore]);<br>                    alpha = Math.max(alpha, res[bestScore]);<br>                    <span class="hljs-keyword">if</span> (alpha &gt;= beta) &#123;<br>                        <span class="hljs-keyword">break</span>;<br>                    &#125;<br>                &#125;<br>                <span class="hljs-comment">/*</span><br><span class="hljs-comment">                 * 若深度为0，搜索该最值对应的走法数组</span><br><span class="hljs-comment">                 */</span><br>                <span class="hljs-keyword">if</span> (curDepth == <span class="hljs-number">0</span>) &#123;<br>                    <span class="hljs-type">int</span> <span class="hljs-variable">bestIndex</span> <span class="hljs-operator">=</span> scoreList.indexOf(alpha);<br>                    best[bestX] = dirList.get(bestIndex)[<span class="hljs-number">0</span>];<br>                    best[bestY] = dirList.get(bestIndex)[<span class="hljs-number">1</span>];<br>                &#125;<br>                best[bestScore] = alpha;<br>                <span class="hljs-keyword">return</span> best;<br><br>                <span class="hljs-comment">// 当前节点为MIN节点时</span><br>            &#125; <span class="hljs-keyword">else</span> &#123;<br>                <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span>[][] childBoard : childBoardList) &#123;<br>                    <span class="hljs-type">int</span>[] res = miniMaxSearch(curDepth + <span class="hljs-number">1</span>, depth, childBoard, alpha, beta, role ^ <span class="hljs-number">1</span>);<br>                    scoreList.add(res[bestScore]);<br>                    beta = Math.min(beta, res[bestScore]);<br>                    <span class="hljs-keyword">if</span> (alpha &gt;= beta) &#123;<br>                        <span class="hljs-keyword">break</span>;<br>                    &#125;<br>                &#125;<br>                best[bestScore] = beta;<br>                <span class="hljs-keyword">return</span> best;<br>            &#125;<br>        &#125;<br>    &#125;<br><br><br>    <span class="hljs-comment">/**</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@description</span>: 基于role评估该棋面的得分</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> &#123;int[][]&#125; board</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@param</span> &#123;int&#125; role</span><br><span class="hljs-comment">     * <span class="hljs-doctag">@return</span> &#123;*&#125;</span><br><span class="hljs-comment">     */</span>    <br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">evaluate</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] board, <span class="hljs-type">int</span> role)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; ROW; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; COL; j++) &#123;<br>                <span class="hljs-keyword">if</span> (board[i][j] != <span class="hljs-number">0</span>) &#123;<br>                    value += evaluatePoint(board, i, j, role);<br>                &#125;<br>            &#125;<br>        &#125;<br>        <span class="hljs-keyword">return</span> value;<br>    &#125;<br><br>    <span class="hljs-comment">/*</span><br><span class="hljs-comment">     * 生成字符串匹配模式</span><br><span class="hljs-comment">     * FIVE为五连，FOUR为活四，RUSH_FOUR为冲四，DEAD_FOUR为死四，THREE为活三，RUSH_THREE为冲三，DEAD_THREE为死三，TWO为活二，DEAD_TWO为死二</span><br><span class="hljs-comment">     */</span><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">FIVE_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;1&#123;5&#125;&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">FOUR_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;011110&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">RUSH_FOUR_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;1(101|011|110)1&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">DEAD_FOUR_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;01111(2|3)|(2|3)11110&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">THREE_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;0(1011|1101)0&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">RUSH_THREE_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;1(100|010|001)1&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">DEAD_THREE_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;0(1011|1101)(2|3)|(2|3)(1011|1101)0&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">TWO_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;01010&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">DEAD_TWO_BLACK</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;0101(2|3)|(2|3)1010&quot;</span>);<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Pattern[] mBlack = &#123; FIVE_BLACK, FOUR_BLACK, RUSH_FOUR_BLACK, DEAD_FOUR_BLACK, THREE_BLACK,<br>            RUSH_THREE_BLACK, DEAD_THREE_BLACK, TWO_BLACK, DEAD_TWO_BLACK &#125;;<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">FIVE_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;2&#123;5&#125;&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">FOUR_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;022220&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">RUSH_FOUR_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;2(202|022|220)2&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">DEAD_FOUR_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;02222(1|3)|(1|3)22220&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">THREE_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;0(2022|2202)0&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">RUSH_THREE_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;2(200|020|002)2&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">DEAD_THREE_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;0(2022|2202)(1|3)|(1|3)(2022|2202)0&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">TWO_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;02020&quot;</span>);<br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> <span class="hljs-type">Pattern</span> <span class="hljs-variable">DEAD_TWO_WHITE</span> <span class="hljs-operator">=</span> Pattern.compile(<span class="hljs-string">&quot;0202(1|3)|(1|3)2020&quot;</span>);<br><br>    <span class="hljs-keyword">private</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">final</span> Pattern[] mWhite = &#123; FIVE_WHITE, FOUR_WHITE, RUSH_FOUR_WHITE, DEAD_FOUR_WHITE, THREE_WHITE,<br>            RUSH_THREE_WHITE, DEAD_THREE_WHITE, TWO_WHITE, DEAD_TWO_WHITE &#125;;<br><br>    <span class="hljs-comment">// 将匹配模式转化为分数</span><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">pattern2point</span><span class="hljs-params">(Pattern pattern)</span> &#123;<br>        <span class="hljs-keyword">switch</span> (pattern.toString()) &#123;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;1&#123;5&#125;&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">100000</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;011110&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">10000</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;1(101|011|110)1&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">1000</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;01111(2|3)|(2|3)11110&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">100</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;0(1011|1101)0&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">100</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;1(100|010|001)1&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">10</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;0(1011|1101)(2|3)|(2|3)(1011|1101)0&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">5</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;01010&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">5</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;0101(2|3)|(2|3)1010&quot;</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">1</span>;<br>            <br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;2&#123;5&#125;&quot;</span>:<br>                <span class="hljs-keyword">return</span> - Integer.MAX_VALUE;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;022220&quot;</span>:<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">100000</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;2(202|022|220)2&quot;</span>:<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">1000</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;02222(1|3)|(1|3)22220&quot;</span>:<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">100</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;0(2022|2202)0&quot;</span>:<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">100</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;2(200|020|002)2&quot;</span>:<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">10</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;0(2022|2202)(1|3)|(1|3)(2022|2202)0&quot;</span>:<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">5</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;02020&quot;</span>:<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">5</span>;<br>            <span class="hljs-keyword">case</span> <span class="hljs-string">&quot;0202(1|3)|(1|3)2020&quot;</span>:<br>                <span class="hljs-keyword">return</span> -<span class="hljs-number">1</span>;<br>            <br>            <span class="hljs-keyword">default</span>:<br>                <span class="hljs-keyword">return</span> <span class="hljs-number">0</span>;<br>        &#125;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-type">int</span> <span class="hljs-title function_">evaluatePoint</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] board, <span class="hljs-type">int</span> x, <span class="hljs-type">int</span> y, <span class="hljs-type">int</span> role)</span> &#123;<br>        <span class="hljs-type">int</span> <span class="hljs-variable">value</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>;<br>        <span class="hljs-type">Board</span> <span class="hljs-variable">Board</span> <span class="hljs-operator">=</span> <span class="hljs-keyword">new</span> <span class="hljs-title class_">Board</span>(board);<br><br>        <span class="hljs-comment">// 以当前棋色放置棋子</span><br>        Board.putChess(x, y, role + <span class="hljs-number">1</span>);<br>        <br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * 搜索以四个方向两端延伸5个位置的棋子(到边界停止)并转化储存为字符串dirROW,dirCOL,dirLeftDiagonal,dirRightDiagonal(1为黑棋，2为白棋，0为空)</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-type">String</span> <span class="hljs-variable">dirROW</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">dirCOL</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">dirLeftDiagonal</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span>;<br>        <span class="hljs-type">String</span> <span class="hljs-variable">dirRightDiagonal</span> <span class="hljs-operator">=</span> <span class="hljs-string">&quot;&quot;</span>;<br><br>        <span class="hljs-comment">// 搜索横向</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x - <span class="hljs-number">5</span>; i &lt; x + <span class="hljs-number">5</span>; i++) &#123;<br>            <span class="hljs-keyword">if</span> (i &gt;= <span class="hljs-number">0</span> &amp;&amp; i &lt; ROW) &#123;<br>                dirROW += board[x][i];<br>            &#125;<br>            <span class="hljs-keyword">else</span>&#123;<br>                dirROW += <span class="hljs-string">&quot;3&quot;</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 搜索纵向</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> y - <span class="hljs-number">5</span>; i &lt; y + <span class="hljs-number">5</span>; i++) &#123;<br>            <span class="hljs-keyword">if</span> (i &gt;= <span class="hljs-number">0</span> &amp;&amp; i &lt; COL) &#123;<br>                dirCOL += board[i][y];<br>            &#125;<br>            <span class="hljs-keyword">else</span>&#123;<br>                dirCOL += <span class="hljs-string">&quot;3&quot;</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 搜索左斜对角线</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x - <span class="hljs-number">5</span>, j = y - <span class="hljs-number">5</span>; i &lt; x + <span class="hljs-number">5</span> &amp;&amp; j &lt; y + <span class="hljs-number">5</span>; i++, j++) &#123;<br>            <span class="hljs-keyword">if</span> (i &gt;= <span class="hljs-number">0</span> &amp;&amp; i &lt; ROW &amp;&amp; j &gt;= <span class="hljs-number">0</span> &amp;&amp; j &lt; COL) &#123;<br>                dirLeftDiagonal += board[i][j];<br>            &#125;<br>            <span class="hljs-keyword">else</span>&#123;<br>                dirLeftDiagonal += <span class="hljs-string">&quot;3&quot;</span>;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-comment">// 搜索右斜对角线</span><br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> x - <span class="hljs-number">5</span>, j = y + <span class="hljs-number">5</span>; i &lt; x + <span class="hljs-number">5</span> &amp;&amp; j &gt; y - <span class="hljs-number">5</span>; i++, j--) &#123;<br>            <span class="hljs-keyword">if</span> (i &gt;= <span class="hljs-number">0</span> &amp;&amp; i &lt; ROW &amp;&amp; j &gt;= <span class="hljs-number">0</span> &amp;&amp; j &lt; COL) &#123;<br>                dirRightDiagonal += board[i][j];<br>            &#125;<br>            <span class="hljs-keyword">else</span>&#123;<br>                dirRightDiagonal += <span class="hljs-string">&quot;3&quot;</span>;<br>            &#125;<br>        &#125;<br>        <br>        <span class="hljs-comment">// 创建棋子字符串数组方便遍历</span><br>        String[] dirs = &#123; dirROW, dirCOL, dirLeftDiagonal, dirRightDiagonal &#125;;<br><br>        <span class="hljs-comment">/*</span><br><span class="hljs-comment">         * 对每一个方向的棋子进行匹配，若匹配成功则返回对应的分数</span><br><span class="hljs-comment">         * 角色相同则返回正分，角色不同则返回负分</span><br><span class="hljs-comment">         * 五连为int最大值，活四为10000，冲四为1000，死四为100，活三为100，冲三为10，死三为5，活二为5，死二为1</span><br><span class="hljs-comment">         */</span><br>        <span class="hljs-keyword">for</span> (String dir : dirs) &#123;<br>            <span class="hljs-keyword">for</span> (Pattern pattern : mBlack) &#123;<br>                <span class="hljs-type">Matcher</span> <span class="hljs-variable">matcher</span> <span class="hljs-operator">=</span> pattern.matcher(dir);<br>                <span class="hljs-type">int</span> <span class="hljs-variable">mul</span> <span class="hljs-operator">=</span> (role == <span class="hljs-number">0</span>)? <span class="hljs-number">1</span> : -<span class="hljs-number">1</span>;<br>                <span class="hljs-keyword">while</span> (matcher.find()) &#123;<br>                    value += mul * pattern2point(pattern);<br>                &#125;<br>            &#125;<br>            <br>            <span class="hljs-keyword">for</span> (Pattern pattern : mWhite) &#123;<br>                <span class="hljs-type">Matcher</span> <span class="hljs-variable">matcher</span> <span class="hljs-operator">=</span> pattern.matcher(dir);<br>                <span class="hljs-type">int</span> <span class="hljs-variable">mul</span> <span class="hljs-operator">=</span> (role == <span class="hljs-number">0</span>)? -<span class="hljs-number">1</span> : <span class="hljs-number">1</span>;<br>                <span class="hljs-keyword">while</span> (matcher.find()) &#123;<br>                    value += mul * pattern2point(pattern);<br>                &#125;<br>            &#125;<br>        &#125;<br><br>        <span class="hljs-keyword">return</span> value;<br>    &#125;<br><br>    <span class="hljs-keyword">public</span> <span class="hljs-keyword">static</span> <span class="hljs-keyword">void</span> <span class="hljs-title function_">copyBoard</span><span class="hljs-params">(<span class="hljs-type">int</span>[][] board, <span class="hljs-type">int</span>[][] newBoard)</span> &#123;<br>        <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">i</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; i &lt; ROW; i++) &#123;<br>            <span class="hljs-keyword">for</span> (<span class="hljs-type">int</span> <span class="hljs-variable">j</span> <span class="hljs-operator">=</span> <span class="hljs-number">0</span>; j &lt; COL; j++) &#123;<br>                newBoard[i][j] = board[i][j];<br>            &#125;<br>        &#125;<br>    &#125;<br>&#125;<br></code></pre></td></tr></table></figure>
+        </div>
+      </div>
+    </div>
+<!-------------------------Ref------------------------->
+<!--https://blog.csdn.net/weixin_42165981/article/details/103263211-->
+<!--https://oi-wiki.org/search/alpha-beta/-->
+<!--https://github.com/lihongxun945/gobang?tab=readme-ov-file--><section class="footnotes"><h2>参考</h2><div class="footnote-list"><ol><li><span id="fn:1" class="footnote-text"><span>本文主要参考自该GitHub Issue <a target="_blank" rel="noopener" href="https://github.com/lihongxun945/gobang?tab=readme-ov-file">javascript gobang AI，JS五子棋AI，源码+教程，基于Alpha-Beta剪枝算法（不是神经网络)</a>
+<p><a href="#fnref:1" rev="footnote" class="footnote-backref"> ↩</a></span></span></li><li><span id="fn:2" class="footnote-text"><span>Minimax算法解释与思路来源 <a target="_blank" rel="noopener" href="https://oi-wiki.org/search/alpha-beta/">Oi.wiki</a> ↩</a></span></span></li><li><span id="fn:4" class="footnote-text"><span>依然参考自 <a target="_blank" rel="noopener" href="https://oi-wiki.org/search/alpha-beta/">Oi.wiki</a><br>
+<a href="#fnref:4" rev="footnote" class="footnote-backref"> ↩</a></span></span></li></ol></div></section></p>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E7%AE%97%E6%B3%95%E6%8B%BE%E9%81%97/" class="category-chain-item">算法拾遗</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/" class="print-no-link">#深度优先搜索</a>
+      
+        <a href="/tags/Alpha-Beta%E5%89%AA%E6%9E%9D/" class="print-no-link">#Alpha-Beta剪枝</a>
+      
+        <a href="/tags/Java/" class="print-no-link">#Java</a>
+      
+        <a href="/tags/%E5%8D%9A%E5%BC%88%E8%AE%BA/" class="print-no-link">#博弈论</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>基于Minmax算法与Alpha-Beta剪枝的五子棋对战AI的Java代码实现</div>
+      <div>http://example.com/2024/04/07/GobangAI-md/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Zaddle</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2024年4月7日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2024年4月20日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2024/03/31/post/" title="本博客已部署Waline评论服务">
+                        <span class="hidden-mobile">本博客已部署Waline评论服务</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://cdn.bootcdn.net/ajax/libs/waline/2.15.5/waline.min.css')
+      Fluid.utils.createScript('https://cdn.bootcdn.net/ajax/libs/waline/2.15.5/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-git-main-zaddle55s-projects.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/tw-emoji"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br></br> <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/snowflake.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/star.min.js"></script>
+<script src="//static.kevinchu.top/blog/assets/js/typing-effect.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
