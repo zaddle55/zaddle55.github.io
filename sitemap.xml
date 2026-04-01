@@ -20,7 +20,7 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/2025/07/12/mml-3/</loc>
+    <loc>http://zaddle55.github.io/2024/03/30/post/</loc>
     
     <lastmod>2025-07-12</lastmod>
     
@@ -38,7 +38,7 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/2024/03/30/post/</loc>
+    <loc>http://zaddle55.github.io/2025/07/12/mml-3/</loc>
     
     <lastmod>2025-07-12</lastmod>
     
@@ -65,15 +65,6 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/2024/04/07/GobangAI-md/</loc>
-    
-    <lastmod>2025-07-12</lastmod>
-    
-    <changefreq>monthly</changefreq>
-    <priority>0.6</priority>
-  </url>
-  
-  <url>
     <loc>http://zaddle55.github.io/2025/07/12/hello-world/</loc>
     
     <lastmod>2025-07-12</lastmod>
@@ -83,7 +74,7 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/2024/07/19/GA/</loc>
+    <loc>http://zaddle55.github.io/2024/04/07/GobangAI-md/</loc>
     
     <lastmod>2025-07-12</lastmod>
     
@@ -93,6 +84,15 @@
   
   <url>
     <loc>http://zaddle55.github.io/2024/02/19/2/</loc>
+    
+    <lastmod>2025-07-12</lastmod>
+    
+    <changefreq>monthly</changefreq>
+    <priority>0.6</priority>
+  </url>
+  
+  <url>
+    <loc>http://zaddle55.github.io/2024/07/19/GA/</loc>
     
     <lastmod>2025-07-12</lastmod>
     
@@ -157,20 +157,6 @@
   
   <url>
     <loc>http://zaddle55.github.io/tags/Git/</loc>
-    <lastmod>2026-04-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://zaddle55.github.io/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/</loc>
-    <lastmod>2026-04-01</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://zaddle55.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
     <lastmod>2026-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -274,6 +260,20 @@
     <priority>0.2</priority>
   </url>
   
+  <url>
+    <loc>http://zaddle55.github.io/tags/%E9%81%97%E4%BC%A0%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://zaddle55.github.io/tags/%E7%AE%97%E6%B3%95/</loc>
+    <lastmod>2026-04-01</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
 
   
   <url>
@@ -284,14 +284,14 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/categories/%E7%AE%97%E6%B3%95%E6%8B%BE%E9%81%97/</loc>
+    <loc>http://zaddle55.github.io/categories/Galgame%E8%AF%84%E6%B5%8B/</loc>
     <lastmod>2026-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/categories/Galgame%E8%AF%84%E6%B5%8B/</loc>
+    <loc>http://zaddle55.github.io/categories/%E7%AE%97%E6%B3%95%E6%8B%BE%E9%81%97/</loc>
     <lastmod>2026-04-01</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>

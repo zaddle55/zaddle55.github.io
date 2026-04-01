@@ -1,0 +1,201 @@
+.hexo-playground {
+  --playground-bg: linear-gradient(180deg, #0f172a 0%, #111827 100%);
+  --playground-panel: rgba(15, 23, 42, 0.92);
+  --playground-border: rgba(148, 163, 184, 0.22);
+  --playground-text: #e5eefc;
+  --playground-muted: #9fb0cb;
+  --playground-accent: #7dd3fc;
+  --playground-success: #86efac;
+  --playground-error: #fda4af;
+  --playground-output-bg: #ffffff;
+  --playground-output-border: #d7deea;
+  --playground-output-text: #111827;
+  --playground-output-muted: #475569;
+  --playground-shadow: 0 28px 60px rgba(15, 23, 42, 0.24);
+  margin: 2rem 0;
+  border: 1px solid var(--playground-border);
+  border-radius: 22px;
+  overflow: hidden;
+  background: var(--playground-bg);
+  box-shadow: var(--playground-shadow);
+}
+
+.hexo-playground[data-busy="true"] {
+  opacity: 0.96;
+}
+
+.hexo-playground__chrome {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  padding: 0.9rem 1rem;
+  border-bottom: 1px solid rgba(148, 163, 184, 0.16);
+  background:
+    linear-gradient(180deg, rgba(255, 255, 255, 0.06), rgba(255, 255, 255, 0)),
+    rgba(15, 23, 42, 0.78);
+}
+
+.hexo-playground__lights {
+  display: inline-flex;
+  gap: 0.4rem;
+  flex-shrink: 0;
+}
+
+.hexo-playground__lights span {
+  width: 0.72rem;
+  height: 0.72rem;
+  border-radius: 999px;
+  display: inline-block;
+}
+
+.hexo-playground__lights span:nth-child(1) {
+  background: #f87171;
+}
+
+.hexo-playground__lights span:nth-child(2) {
+  background: #facc15;
+}
+
+.hexo-playground__lights span:nth-child(3) {
+  background: #4ade80;
+}
+
+.hexo-playground__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  min-width: 0;
+  flex-wrap: wrap;
+}
+
+.hexo-playground__title {
+  color: var(--playground-text);
+  letter-spacing: 0.01em;
+}
+
+.hexo-playground__badge {
+  display: inline-flex;
+  align-items: center;
+  padding: 0.12rem 0.5rem;
+  border-radius: 999px;
+  font-size: 0.74rem;
+  line-height: 1.5;
+  color: var(--playground-muted);
+  background: rgba(125, 211, 252, 0.08);
+  border: 1px solid rgba(125, 211, 252, 0.14);
+}
+
+.hexo-playground__actions {
+  margin-left: auto;
+  display: inline-flex;
+  gap: 0.55rem;
+  flex-wrap: wrap;
+}
+
+.hexo-playground__button {
+  appearance: none;
+  border: 1px solid rgba(125, 211, 252, 0.18);
+  color: var(--playground-text);
+  background: rgba(125, 211, 252, 0.1);
+  border-radius: 999px;
+  padding: 0.42rem 0.9rem;
+  font-size: 0.85rem;
+  line-height: 1.2;
+  transition: transform 140ms ease, background 140ms ease, border-color 140ms ease;
+}
+
+.hexo-playground__button:hover {
+  transform: translateY(-1px);
+  background: rgba(125, 211, 252, 0.16);
+  border-color: rgba(125, 211, 252, 0.3);
+}
+
+.hexo-playground__button:disabled {
+  opacity: 0.6;
+  cursor: progress;
+  transform: none;
+}
+
+.hexo-playground__editor {
+  min-height: 280px;
+  background: rgba(2, 6, 23, 0.4);
+}
+
+.hexo-playground .CodeMirror {
+  height: auto;
+  min-height: 280px;
+  font-size: 0.92rem;
+  line-height: 1.65;
+  padding: 0.65rem 0;
+}
+
+.hexo-playground .CodeMirror-gutters {
+  border-right: 1px solid rgba(148, 163, 184, 0.12);
+  background: transparent;
+}
+
+.hexo-playground__panels {
+  display: grid;
+  gap: 0.8rem;
+  padding: 1rem;
+  border-top: 1px solid rgba(148, 163, 184, 0.12);
+  background: linear-gradient(180deg, rgba(15, 23, 42, 0.86), rgba(15, 23, 42, 0.94));
+}
+
+.hexo-playground__status {
+  color: var(--playground-output-muted);
+  font-size: 0.87rem;
+}
+
+.hexo-playground__output,
+.hexo-playground__error {
+  margin: 0;
+  padding: 0.9rem 1rem;
+  border-radius: 16px;
+  overflow: auto;
+  white-space: pre-wrap;
+  word-break: break-word;
+  font-size: 0.88rem;
+  line-height: 1.55;
+  border: 1px solid rgba(148, 163, 184, 0.12);
+  display: none;
+}
+
+.hexo-playground__output[data-visible="true"],
+.hexo-playground__error[data-visible="true"] {
+  display: block;
+}
+
+.hexo-playground__output {
+  color: var(--playground-output-text);
+  background: var(--playground-output-bg);
+  border-color: var(--playground-output-border);
+  font-family: SFMono-Regular, Consolas, Monaco, monospace;
+  font-size: 0.9rem;
+  text-shadow: none;
+}
+
+.hexo-playground__error {
+  color: #7f1d1d;
+  background: #fff1f2;
+  border-color: #fecdd3;
+  font-family: SFMono-Regular, Consolas, Monaco, monospace;
+  font-size: 0.9rem;
+  text-shadow: none;
+}
+
+@media (max-width: 768px) {
+  .hexo-playground__chrome {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .hexo-playground__actions {
+    margin-left: 0;
+  }
+
+  .hexo-playground__button {
+    width: calc(33.333% - 0.4rem);
+    justify-content: center;
+  }
+}
