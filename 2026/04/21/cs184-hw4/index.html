@@ -1,0 +1,1142 @@
+
+
+<!DOCTYPE html>
+<html lang="zh-CN" data-default-color-scheme=auto>
+
+
+
+<head>
+  <meta charset="UTF-8">
+  <link rel="apple-touch-icon" sizes="76x76" href="/img/favicon.ico">
+  <link rel="icon" href="/img/favicon.ico">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=5.0, shrink-to-fit=no">
+  <meta http-equiv="x-ua-compatible" content="ie=edge">
+  
+  <meta name="theme-color" content="#2f4154">
+  <meta name="author" content="Dantes Chen">
+  <meta name="keywords" content="">
+  
+    <meta name="description" content="Link to webpage: zaddle.top&#x2F;2026&#x2F;04&#x2F;21&#x2F;cs184-hw4&#x2F; Link to GitHub repository: zaddle55&#x2F;zaddle55.github.io Overview In this homework I implemented a real-time cloth simulation system. The pipeline start">
+<meta property="og:type" content="article">
+<meta property="og:title" content="CS184 Homework 4 -- Cloth Sim">
+<meta property="og:url" content="http://zaddle55.github.io/2026/04/21/cs184-hw4/index.html">
+<meta property="og:site_name" content="南十字星站">
+<meta property="og:description" content="Link to webpage: zaddle.top&#x2F;2026&#x2F;04&#x2F;21&#x2F;cs184-hw4&#x2F; Link to GitHub repository: zaddle55&#x2F;zaddle55.github.io Overview In this homework I implemented a real-time cloth simulation system. The pipeline start">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="http://zaddle55.github.io/img/post/clothsim.png">
+<meta property="article:published_time" content="2026-04-22T06:24:16.000Z">
+<meta property="article:modified_time" content="2026-04-24T06:18:00.519Z">
+<meta property="article:author" content="Zaddle">
+<meta property="article:tag" content="UCB">
+<meta property="article:tag" content="Computer Graphics">
+<meta property="article:tag" content="Cloth Simulation">
+<meta property="article:tag" content="Shaders">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="http://zaddle55.github.io/img/post/clothsim.png">
+  
+  
+    <meta name="referrer" content="no-referrer-when-downgrade">
+  
+  
+  <title>CS184 Homework 4 -- Cloth Sim - 南十字星站</title>
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/twitter-bootstrap/4.6.1/css/bootstrap.min.css" />
+
+
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/github-markdown-css/4.0.0/github-markdown.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/hint.css/2.7.0/hint.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.css" />
+
+  <link  rel="stylesheet" href="https://lib.baomitu.com/KaTeX/0.16.2/katex.min.css" />
+
+
+
+<!-- 主题依赖的图标库，不要自行修改 -->
+<!-- Do not modify the link that theme dependent icons -->
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1749284_hj8rtnfg7um.css">
+
+
+
+<link rel="stylesheet" href="//at.alicdn.com/t/font_1736178_lbnruvf0jn.css">
+
+
+<link  rel="stylesheet" href="/css/main.css" />
+
+
+  <link id="highlight-css" rel="stylesheet" href="/css/highlight.css" />
+  
+    <link id="highlight-css-dark" rel="stylesheet" href="/css/highlight-dark.css" />
+  
+
+
+
+  
+<link rel="stylesheet" href="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/scroll.css">
+<link rel="stylesheet" href="/css/macpanel.css">
+
+
+
+  <script id="fluid-configs">
+    var Fluid = window.Fluid || {};
+    Fluid.ctx = Object.assign({}, Fluid.ctx)
+    var CONFIG = {"hostname":"zaddle55.github.io","root":"/","version":"1.9.7","typing":{"enable":true,"typeSpeed":70,"cursorChar":"_","loop":false,"scope":[]},"anchorjs":{"enable":true,"element":"h1,h2,h3,h4,h5,h6","placement":"left","visible":"hover","icon":"❡"},"progressbar":{"enable":true,"height_px":3,"color":"#29d","options":{"showSpinner":false,"trickleSpeed":100}},"code_language":{"enable":true,"default":"TEXT"},"copy_btn":true,"image_caption":{"enable":true},"image_zoom":{"enable":true,"img_url_replace":["",""]},"toc":{"enable":true,"placement":"right","headingSelector":"h1,h2,h3,h4,h5,h6","collapseDepth":0},"lazyload":{"enable":true,"loading_img":"/img/loading.gif","onlypost":false,"offset_factor":2},"web_analytics":{"enable":false,"follow_dnt":true,"baidu":null,"google":{"measurement_id":null},"tencent":{"sid":null,"cid":null},"woyaola":null,"cnzz":null,"leancloud":{"app_id":null,"app_key":null,"server_url":null,"path":"window.location.pathname","ignore_local":false}},"search_path":"/local-search.xml","include_content_in_search":true};
+
+    if (CONFIG.web_analytics.follow_dnt) {
+      var dntVal = navigator.doNotTrack || window.doNotTrack || navigator.msDoNotTrack;
+      Fluid.ctx.dnt = dntVal && (dntVal.startsWith('1') || dntVal.startsWith('yes') || dntVal.startsWith('on'));
+    }
+  </script>
+  <script  src="/js/utils.js" ></script>
+  <script  src="/js/color-schema.js" ></script>
+  
+
+
+  <link rel="stylesheet" href="/playground-assets/vendor/codemirror/codemirror.css"><link rel="stylesheet" href="/playground-assets/vendor/codemirror/theme/eclipse.css"><link rel="stylesheet" href="/playground-assets/vendor/codemirror/theme/material-darker.css"><link rel="stylesheet" href="/playground-assets/playground.css">
+<!-- hexo injector head_end start --><link rel="stylesheet" href="/ogp-preview-card/ogp-preview-card.css"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 6.3.0"></head>
+
+
+<body>
+  
+
+  <header>
+    
+
+<div class="header-inner" style="height: 70vh;">
+  <nav id="navbar" class="navbar fixed-top  navbar-expand-lg navbar-dark scrolling-navbar">
+  <div class="container">
+    <a class="navbar-brand" href="/">
+      <strong class="navbar-title">南十字星站</strong>
+    </a>
+
+    <button id="navbar-toggler-btn" class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <div class="animated-icon"><span></span><span></span><span></span></div>
+    </button>
+
+    <!-- Collapsible content -->
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav ml-auto text-center">
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/" target="_self">
+                <i class="iconfont icon-home-fill"></i>
+                <span>首页</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/archives/" target="_self">
+                <i class="iconfont icon-archive-fill"></i>
+                <span>归档</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/categories/" target="_self">
+                <i class="iconfont icon-category-fill"></i>
+                <span>分类</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/tags/" target="_self">
+                <i class="iconfont icon-tags-fill"></i>
+                <span>标签</span>
+              </a>
+            </li>
+          
+        
+          
+          
+          
+          
+            <li class="nav-item">
+              <a class="nav-link" href="/about/" target="_self">
+                <i class="iconfont icon-user-fill"></i>
+                <span>关于</span>
+              </a>
+            </li>
+          
+        
+        
+          <li class="nav-item" id="search-btn">
+            <a class="nav-link" target="_self" href="javascript:;" data-toggle="modal" data-target="#modalSearch" aria-label="Search">
+              <i class="iconfont icon-search"></i>
+            </a>
+          </li>
+          
+        
+        
+          <li class="nav-item" id="color-toggle-btn">
+            <a class="nav-link" target="_self" href="javascript:;" aria-label="Color Toggle">
+              <i class="iconfont icon-dark" id="color-toggle-icon"></i>
+            </a>
+          </li>
+        
+      </ul>
+    </div>
+  </div>
+</nav>
+
+  
+
+<div id="banner" class="banner" parallax=true
+     style="background: url('/img/post/clothsim.png') no-repeat center center; background-size: cover;">
+  <div class="full-bg-img">
+    <div class="mask flex-center" style="background-color: rgba(0, 0, 0, 0.4)">
+      <div class="banner-text text-center fade-in-up">
+        <div class="h2">
+          
+            <span id="subtitle" data-typed-text="CS184 Homework 4 -- Cloth Sim"></span>
+          
+        </div>
+
+        
+          
+  <div class="mt-3">
+    
+    
+      <span class="post-meta">
+        <i class="iconfont icon-date-fill" aria-hidden="true"></i>
+        <time datetime="2026-04-22 14:24" pubdate>
+          2026年4月22日 下午
+        </time>
+      </span>
+    
+  </div>
+
+  <div class="mt-1">
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-chart"></i>
+        
+          854 字
+        
+      </span>
+    
+
+    
+      <span class="post-meta mr-2">
+        <i class="iconfont icon-clock-fill"></i>
+        
+        
+        
+          8 分钟
+        
+      </span>
+    
+
+    
+    
+      
+        <span id="busuanzi_container_page_pv" style="display: none">
+          <i class="iconfont icon-eye" aria-hidden="true"></i>
+          <span id="busuanzi_value_page_pv"></span> 次
+        </span>
+        
+      
+    
+  </div>
+
+
+        
+      </div>
+
+      
+    </div>
+  </div>
+</div>
+
+</div>
+
+  </header>
+
+  <main>
+    
+      
+
+<div class="container-fluid nopadding-x">
+  <div class="row nomargin-x">
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar category-bar" style="margin-right: -1rem">
+    
+
+
+
+
+
+<div class="category-list">
+  
+  
+    
+    
+    
+    <div class="category row nomargin-x">
+      <a class="category-item 
+          list-group-item category-item-action col-10 col-md-11 col-xm-11" title="计算机图形学"
+        id="heading-84d8d91e2e9bad1e871ae8ca00fac8ab" role="tab" data-toggle="collapse" href="#collapse-84d8d91e2e9bad1e871ae8ca00fac8ab"
+        aria-expanded="true"
+      >
+        计算机图形学
+        <span class="list-group-count">(2)</span>
+        <i class="iconfont icon-arrowright"></i>
+      </a>
+      
+      <div class="category-collapse collapse show" id="collapse-84d8d91e2e9bad1e871ae8ca00fac8ab"
+           role="tabpanel" aria-labelledby="heading-84d8d91e2e9bad1e871ae8ca00fac8ab">
+        
+        
+          
+  <div class="category-post-list">
+    
+    
+      
+      
+        <a href="/2026/03/29/cs184-hw3/" title="CS184 Homework 3 -- Ray Tracing"
+           class="list-group-item list-group-item-action
+           ">
+          <span class="category-post">CS184 Homework 3 -- Ray Tracing</span>
+        </a>
+      
+    
+      
+      
+        <a href="/2026/04/21/cs184-hw4/" title="CS184 Homework 4 -- Cloth Sim"
+           class="list-group-item list-group-item-action
+           active">
+          <span class="category-post">CS184 Homework 4 -- Cloth Sim</span>
+        </a>
+      
+    
+  </div>
+
+        
+      </div>
+    </div>
+  
+</div>
+
+
+  </aside>
+
+
+    </div>
+
+    <div class="col-lg-8 nopadding-x-md">
+      <div class="container nopadding-x-md" id="board-ctn">
+        <div id="board">
+          <article class="post-content mx-auto">
+            <h1 id="seo-header">CS184 Homework 4 -- Cloth Sim</h1>
+            
+              <p id="updated-time" class="note note-info" style="">
+                
+                  
+                    本文最后更新于 2026年4月24日 下午
+                  
+                
+              </p>
+            
+            
+              <div class="markdown-body">
+                
+                <p>Link to webpage: <a target="_blank" rel="noopener" href="https://zaddle.top/2026/04/21/cs184-hw4/">zaddle.top/2026/04/21/cs184-hw4/</a><br>
+Link to GitHub repository: <a target="_blank" rel="noopener" href="https://github.com/zaddle55/zaddle55.github.io">zaddle55/zaddle55.github.io</a></p>
+<h2 id="Overview">Overview</h2>
+<p>In this homework I implemented a real-time cloth simulation system. The pipeline starts by building a grid of point masses connected by structural, shearing, and bending springs (Part 1). Physics simulation is driven by Verlet integration with external forces (gravity) and internal spring correction forces, plus a deformation constraint that limits spring stretch to 10% per timestep (Part 2). Collision handling against spheres and planes keeps the cloth from passing through objects (Part 3), while spatial hashing enables efficient self-collision detection so the cloth folds naturally onto itself (Part 4). Finally, I implemented several GLSL shaders — Blinn-Phong, texture mapping, bump/displacement mapping, and environment-mapped mirror reflection (Part 5).</p>
+<p>The most interesting takeaway was seeing how a few simple rules (Hooke’s law springs, Verlet integration, spatial hash collision) combine to produce visually convincing cloth behavior. Tuning parameters like <code>ks</code>, density, and damping reveals a rich space of cloth “materials” from silk to burlap.</p>
+<h2 id="Part-1-Masses-and-springs">Part 1: Masses and springs</h2>
+<p>In <code>buildGrid()</code>, I first lay out <code>num_width_points * num_height_points</code> point masses on an evenly spaced grid. For a <code>HORIZONTAL</code> orientation the cloth lies in the xz-plane at <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>y</mi><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">y = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>; for <code>VERTICAL</code> it lies in the xy-plane with a small random z-offset in <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">[</mo><mo>−</mo><mn>0.001</mn><mo separator="true">,</mo><mn>0.001</mn><mo stretchy="false">]</mo></mrow><annotation encoding="application/x-tex">[-0.001, 0.001]</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">[</span><span class="mord">−</span><span class="mord">0.001</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.001</span><span class="mclose">]</span></span></span></span> to break symmetry. Each point mass is marked pinned or unpinned according to the scene’s pin list.</p>
+<p>After creating the point masses, I iterate over the grid and connect them with three types of springs:</p>
+<ul>
+<li><strong>Structural</strong>: connect each mass to its left neighbor <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x-1, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span> and upper neighbor <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x, y-1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span>.</li>
+<li><strong>Shearing</strong>: connect each mass diagonally to <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mn>1</mn><mo separator="true">,</mo><mi>y</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x-1, y-1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>+</mo><mn>1</mn><mo separator="true">,</mo><mi>y</mi><mo>−</mo><mn>1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x+1, y-1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8389em;vertical-align:-0.1944em;"></span><span class="mord">1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">1</span><span class="mclose">)</span></span></span></span>.</li>
+<li><strong>Bending</strong>: connect each mass to the mass two steps away horizontally <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo>−</mo><mn>2</mn><mo separator="true">,</mo><mi>y</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x-2, y)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mclose">)</span></span></span></span> and vertically <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mi>x</mi><mo separator="true">,</mo><mi>y</mi><mo>−</mo><mn>2</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(x, y-2)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal">x</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mclose">)</span></span></span></span>.</li>
+</ul>
+<p>Below are wireframe screenshots of <code>scene/pinned2.json</code> showing the three constraint types:</p>
+<table>
+<thead>
+<tr>
+<th>Without shearing constraints</th>
+<th>With only shearing constraints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p1_no_shearing.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+<td><img src="/img/post/cs184-hw4/p1_only_shearing.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>With all constraints</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p1_all_constraints.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+</tr>
+</tbody>
+</table>
+<p>Without shearing, only the horizontal/vertical grid lines are visible (structural) along with the sparser skip-one connections (bending). With only shearing enabled, we see diagonal cross-hatching. With all three enabled, the wireframe is the densest, combining axis-aligned and diagonal springs.</p>
+<h2 id="Part-2-Simulation-via-numerical-integration">Part 2: Simulation via numerical integration</h2>
+<p>The simulation loop in <code>Cloth::simulate()</code> proceeds in four stages each timestep:</p>
+<ol>
+<li>
+<p><strong>Accumulate forces.</strong> Every point mass receives the same external force <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">F</mi><mi>e</mi></msub><mo>=</mo><mi>m</mi><mi mathvariant="bold">a</mi></mrow><annotation encoding="application/x-tex">\mathbf{F}_e = m\mathbf{a}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8361em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">e</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4444em;"></span><span class="mord mathnormal">m</span><span class="mord mathbf">a</span></span></span></span> (gravity). Then, for each enabled spring, Hooke’s law computes a correction force <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">F</mi><mi>s</mi></msub><mo>=</mo><msub><mi>k</mi><mi>s</mi></msub><mo>⋅</mo><mo stretchy="false">(</mo><mo stretchy="false">∥</mo><msub><mi mathvariant="bold">p</mi><mi>a</mi></msub><mo>−</mo><msub><mi mathvariant="bold">p</mi><mi>b</mi></msub><mo stretchy="false">∥</mo><mo>−</mo><msub><mi>l</mi><mn>0</mn></msub><mo stretchy="false">)</mo><mo>⋅</mo><mover accent="true"><mi mathvariant="bold">d</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\mathbf{F}_s = k_s \cdot (\lVert \mathbf{p}_a - \mathbf{p}_b \rVert - l_0) \cdot \hat{\mathbf{d}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8361em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf">F</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(∥</span><span class="mord"><span class="mord mathbf">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathbf">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">b</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">∥</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0197em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9579em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9579em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathbf">d</span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.0833em;"><span class="mord">^</span></span></span></span></span></span></span></span></span></span>, where bending springs use <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0.2</mn><mo>⋅</mo><msub><mi>k</mi><mi>s</mi></msub></mrow><annotation encoding="application/x-tex">0.2 \cdot k_s</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> for a weaker resistance.</p>
+</li>
+<li>
+<p><strong>Verlet integration.</strong> Unpinned masses update position via:</p>
+</li>
+</ol>
+<p class="katex-block "><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mi mathvariant="bold">x</mi><mo stretchy="false">(</mo><mi>t</mi><mo>+</mo><mi mathvariant="normal">Δ</mi><mi>t</mi><mo stretchy="false">)</mo><mo>=</mo><mi mathvariant="bold">x</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>+</mo><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mi>d</mi><mo stretchy="false">)</mo><mo>⋅</mo><mo stretchy="false">(</mo><mi mathvariant="bold">x</mi><mo stretchy="false">(</mo><mi>t</mi><mo stretchy="false">)</mo><mo>−</mo><mi mathvariant="bold">x</mi><mo stretchy="false">(</mo><mi>t</mi><mo>−</mo><mi mathvariant="normal">Δ</mi><mi>t</mi><mo stretchy="false">)</mo><mo stretchy="false">)</mo><mo>+</mo><mi mathvariant="bold">a</mi><mo>⋅</mo><mi mathvariant="normal">Δ</mi><msup><mi>t</mi><mn>2</mn></msup></mrow><annotation encoding="application/x-tex">\mathbf{x}(t+\Delta t) = \mathbf{x}(t) + (1 - d) \cdot (\mathbf{x}(t) - \mathbf{x}(t - \Delta t)) + \mathbf{a} \cdot \Delta t^2
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">x</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Δ</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">x</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">d</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathbf">x</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">x</span><span class="mopen">(</span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">Δ</span><span class="mord mathnormal">t</span><span class="mclose">))</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4445em;"></span><span class="mord mathbf">a</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8641em;"></span><span class="mord">Δ</span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8641em;"><span style="top:-3.113em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span></span></span></span></span></p>
+<p>where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi></mrow><annotation encoding="application/x-tex">d</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span></span></span></span> is the damping percentage divided by 100.</p>
+<ol start="3">
+<li>
+<p><strong>Self-collision</strong> (Part 4) and <strong>object collision</strong> (Part 3).</p>
+</li>
+<li>
+<p><strong>Deformation constraint</strong> ([Provot 1995]). For each spring, if its current length exceeds <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1.1</mn><mo>×</mo><msub><mi>l</mi><mn>0</mn></msub></mrow><annotation encoding="application/x-tex">1.1 \times l_0</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1.1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.01968em;">l</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3011em;"><span style="top:-2.55em;margin-left:-0.0197em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">0</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span>, a correction vector pulls the endpoints back. If both endpoints are unpinned, each gets half the correction; if one is pinned, the free endpoint absorbs the full correction.</p>
+</li>
+</ol>
+<h3 id="Effect-of-spring-constant-ks">Effect of spring constant <code>ks</code></h3>
+<table>
+<thead>
+<tr>
+<th>Low ks = 500 N/m</th>
+<th>High ks = 50000 N/m</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p2_ks_low.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+<td><img src="/img/post/cs184-hw4/p2_ks_high.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+</tr>
+</tbody>
+</table>
+<p>With a very low <code>ks</code> the cloth is extremely elastic — it sags deeply under gravity and ripples readily, like silk. With a high <code>ks</code> the cloth is stiff, holds its shape with minimal droop, and feels more like canvas or cardboard.</p>
+<h3 id="Effect-of-density">Effect of density</h3>
+<table>
+<thead>
+<tr>
+<th>Low density = 1 g/cm²</th>
+<th>High density = 100 g/cm²</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423221601.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423221639.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+</tr>
+</tbody>
+</table>
+<p>Low density makes the cloth very light — it barely sags and hovers almost flat between the two pinned corners. High density increases the gravitational pull per mass, causing the cloth to droop heavily with a deep parabolic sag, similar to the effect of lowering <code>ks</code>.</p>
+<h3 id="Effect-of-damping">Effect of damping</h3>
+<table>
+<thead>
+<tr>
+<th>Low damping ≈ 0.05%</th>
+<th>High damping ≈ 0.8%</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p2_damping_low.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+<td><img src="/img/post/cs184-hw4/p2_damping_high.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+</tr>
+</tbody>
+</table>
+<p>Low damping causes the cloth to oscillate back and forth for a long time before coming to rest — it swings past the equilibrium point repeatedly. High damping makes the cloth fall slowly and smoothly without overshooting, converging to rest position quickly as if moving through thick fluid.</p>
+<h3 id="Resting-state-with-pinned4-json">Resting state with <code>pinned4.json</code></h3>
+<table>
+<thead>
+<tr>
+<th>scene/pinned4.json at rest (default parameters)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423221952.png" srcset="/img/loading.gif" lazyload width="600" /></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Part-3-Handling-collisions-with-other-objects">Part 3: Handling collisions with other objects</h2>
+<h3 id="Sphere-collision">Sphere collision</h3>
+<p>In <code>Sphere::collide()</code>, I check whether the point mass has moved inside the sphere by testing if <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">∥</mo><mi mathvariant="bold">p</mi><mo>−</mo><mi mathvariant="bold">o</mi><mo stretchy="false">∥</mo><mo>&lt;</mo><mi>r</mi></mrow><annotation encoding="application/x-tex">\lVert \mathbf{p} - \mathbf{o} \rVert &lt; r</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∥</span><span class="mord mathbf">p</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">o</span><span class="mclose">∥</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">&lt;</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.4306em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span></span></span></span>. If so, I compute the tangent point on the sphere surface along the direction from the origin to the point mass: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">t</mi><mo>=</mo><mi mathvariant="bold">o</mi><mo>+</mo><mi>r</mi><mo>⋅</mo><mover accent="true"><mi mathvariant="bold">d</mi><mo>^</mo></mover></mrow><annotation encoding="application/x-tex">\mathbf{t} = \mathbf{o} + r \cdot \hat{\mathbf{d}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6349em;"></span><span class="mord mathbf">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6667em;vertical-align:-0.0833em;"></span><span class="mord mathbf">o</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.4445em;"></span><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.9579em;"></span><span class="mord accent"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.9579em;"><span style="top:-3em;"><span class="pstrut" style="height:3em;"></span><span class="mord mathbf">d</span></span><span style="top:-3.2634em;"><span class="pstrut" style="height:3em;"></span><span class="accent-body" style="left:-0.0833em;"><span class="mord">^</span></span></span></span></span></span></span></span></span></span>. The correction vector from <code>last_position</code> to the tangent point is then scaled by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>1</mn><mo>−</mo><mtext>friction</mtext><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(1 - \text{friction})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">friction</span></span><span class="mclose">)</span></span></span></span> to get the final position.</p>
+<h3 id="Plane-collision">Plane collision</h3>
+<p>In <code>Plane::collide()</code>, I cast a ray from <code>last_position</code> to <code>position</code> and compute whether it crosses the plane using the parametric intersection <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>t</mi><mo>=</mo><mo>−</mo><mfrac><mrow><mo stretchy="false">(</mo><mi mathvariant="bold">o</mi><mo>−</mo><msub><mi mathvariant="bold">p</mi><mtext>plane</mtext></msub><mo stretchy="false">)</mo><mo>⋅</mo><mi mathvariant="bold">n</mi></mrow><mrow><mi mathvariant="bold">d</mi><mo>⋅</mo><mi mathvariant="bold">n</mi></mrow></mfrac></mrow><annotation encoding="application/x-tex">t = -\frac{(\mathbf{o} - \mathbf{p}_{\text{plane}}) \cdot \mathbf{n}}{\mathbf{d} \cdot \mathbf{n}}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6151em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1.3831em;vertical-align:-0.345em;"></span><span class="mord">−</span><span class="mord"><span class="mopen nulldelimiter"></span><span class="mfrac"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:1.0381em;"><span style="top:-2.655em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord mathbf mtight">d</span><span class="mbin mtight">⋅</span><span class="mord mathbf mtight">n</span></span></span></span><span style="top:-3.23em;"><span class="pstrut" style="height:3em;"></span><span class="frac-line" style="border-bottom-width:0.04em;"></span></span><span style="top:-3.5131em;"><span class="pstrut" style="height:3em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mopen mtight">(</span><span class="mord mathbf mtight">o</span><span class="mbin mtight">−</span><span class="mord mtight"><span class="mord mathbf mtight">p</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3448em;"><span style="top:-2.3488em;margin-left:0em;margin-right:0.0714em;"><span class="pstrut" style="height:2.5em;"></span><span class="sizing reset-size3 size1 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">plane</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.2901em;"><span></span></span></span></span></span></span><span class="mclose mtight">)</span><span class="mbin mtight">⋅</span><span class="mord mathbf mtight">n</span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.345em;"><span></span></span></span></span></span><span class="mclose nulldelimiter"></span></span></span></span></span>. If <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>0</mn><mo>≤</mo><mi>t</mi><mo>≤</mo><mo stretchy="false">∥</mo><mi mathvariant="bold">x</mi><mo stretchy="false">∥</mo></mrow><annotation encoding="application/x-tex">0 \le t \le \lVert \mathbf{x} \rVert</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7804em;vertical-align:-0.136em;"></span><span class="mord">0</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7719em;vertical-align:-0.136em;"></span><span class="mord mathnormal">t</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">≤</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">∥</span><span class="mord mathbf">x</span><span class="mclose">∥</span></span></span></span>, the cloth crossed the plane this step. I bump the intersection point slightly toward the side the mass came from (by <code>SURFACE_OFFSET</code>) and apply the friction-scaled correction.</p>
+<h3 id="Sphere-at-different-spring-constants">Sphere at different spring constants</h3>
+<table>
+<thead>
+<tr>
+<th>ks = 500</th>
+<th>ks = 5000 (default)</th>
+<th>ks = 50000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p3_sphere_ks500.png" srcset="/img/loading.gif" lazyload width="320" /></td>
+<td><img src="/img/post/cs184-hw4/p3_sphere_ks5000.png" srcset="/img/loading.gif" lazyload width="320" /></td>
+<td><img src="/img/post/cs184-hw4/p3_sphere_ks50000.png" srcset="/img/loading.gif" lazyload width="320" /></td>
+</tr>
+</tbody>
+</table>
+<p>At <code>ks = 500</code> the cloth drapes loosely over the sphere, conforming tightly to its surface with many wrinkles. At the default <code>ks = 5000</code> the cloth still drapes but retains more of its own shape, forming broader folds. At <code>ks = 50000</code> the cloth is stiff and barely conforms, almost hovering over the sphere with wide, flat drapes extending outward.</p>
+<h3 id="Cloth-resting-on-a-plane">Cloth resting on a plane</h3>
+<table>
+<thead>
+<tr>
+<th>Cloth at rest on a plane (scene/plane.json)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p3_plane_rest.png" srcset="/img/loading.gif" lazyload width="600" /></td>
+</tr>
+</tbody>
+</table>
+<h2 id="Part-4-Handling-self-collisions">Part 4: Handling self-collisions</h2>
+<p>Self-collision is implemented using spatial hashing for efficiency. In <code>hash_position()</code>, I partition 3D space into boxes of size <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>3</mn><mi>w</mi><mi mathvariant="normal">/</mi><msub><mi>n</mi><mi>w</mi></msub><mo stretchy="false">)</mo><mo>×</mo><mo stretchy="false">(</mo><mn>3</mn><mi>h</mi><mi mathvariant="normal">/</mi><msub><mi>n</mi><mi>h</mi></msub><mo stretchy="false">)</mo><mo>×</mo><mi>max</mi><mo>⁡</mo><mo stretchy="false">(</mo><mn>3</mn><mi>w</mi><mi mathvariant="normal">/</mi><msub><mi>n</mi><mi>w</mi></msub><mo separator="true">,</mo><mn>3</mn><mi>h</mi><mi mathvariant="normal">/</mi><msub><mi>n</mi><mi>h</mi></msub><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(3w/n_w) \times (3h/n_h) \times \max(3w/n_w, 3h/n_h)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">3</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">3</span><span class="mord mathnormal">h</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">×</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord">3</span><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight" style="margin-right:0.02691em;">w</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">3</span><span class="mord mathnormal">h</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal">n</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">h</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">)</span></span></span></span> and map each position to a float hash via:</p>
+<p class="katex-block "><span class="katex-display"><span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML" display="block"><semantics><mrow><mtext>hash</mtext><mo>=</mo><mo stretchy="false">⌊</mo><mi>x</mi><mi mathvariant="normal">/</mi><msub><mi>w</mi><mtext>box</mtext></msub><mo stretchy="false">⌋</mo><mo>⋅</mo><mn>73856093</mn><mo>+</mo><mo stretchy="false">⌊</mo><mi>y</mi><mi mathvariant="normal">/</mi><msub><mi>h</mi><mtext>box</mtext></msub><mo stretchy="false">⌋</mo><mo>⋅</mo><mn>19349663</mn><mo>+</mo><mo stretchy="false">⌊</mo><mi>z</mi><mi mathvariant="normal">/</mi><msub><mi>t</mi><mtext>box</mtext></msub><mo stretchy="false">⌋</mo><mo>⋅</mo><mn>83492791</mn></mrow><annotation encoding="application/x-tex">\text{hash} = \lfloor x/w_{\text{box}} \rfloor \cdot 73856093 + \lfloor y/h_{\text{box}} \rfloor \cdot 19349663 + \lfloor z/t_{\text{box}} \rfloor \cdot 83492791
+</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">hash</span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">⌊</span><span class="mord mathnormal">x</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02691em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0269em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">box</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">⌋</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">73856093</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">⌊</span><span class="mord mathnormal" style="margin-right:0.03588em;">y</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal">h</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">box</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">⌋</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">19349663</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">⌊</span><span class="mord mathnormal" style="margin-right:0.04398em;">z</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal">t</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:0em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight"><span class="mord text mtight"><span class="mord mtight">box</span></span></span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mclose">⌋</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">83492791</span></span></span></span></span></p>
+<p><code>build_spatial_map()</code> rebuilds the hash table each step. <code>self_collide()</code> looks up all point masses in the same bucket as the candidate mass. For each neighbor within distance <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>2</mn><mo>⋅</mo><mtext>thickness</mtext></mrow><annotation encoding="application/x-tex">2 \cdot \text{thickness}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">2</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord text"><span class="mord">thickness</span></span></span></span></span>, it computes a repulsion correction pushing the mass outward. The averaged correction is divided by <code>simulation_steps</code> for stability.</p>
+<h3 id="Self-collision-sequence">Self-collision sequence</h3>
+<table>
+<thead>
+<tr>
+<th>Early: initial self-collision</th>
+<th>Mid: cloth folding</th>
+<th>Rest: final state</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423222238.png" srcset="/img/loading.gif" lazyload width="320" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423222656.png" srcset="/img/loading.gif" lazyload width="320" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423222730.png" srcset="/img/loading.gif" lazyload width="320" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="Varying-density">Varying density</h3>
+<table>
+<thead>
+<tr>
+<th>Low density = 1 g/cm²</th>
+<th>High density = 50 g/cm²</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423223000.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423223151.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+</tr>
+</tbody>
+</table>
+<p>With low density, the cloth falls slowly and forms broad, gentle folds with fewer layers of self-collision. With high density, the cloth falls quickly and crumples into many tight, compressed folds — more layers pile on top of each other.</p>
+<h3 id="Varying-ks">Varying <code>ks</code></h3>
+<table>
+<thead>
+<tr>
+<th>Low ks = 500</th>
+<th>High ks = 50000</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p4_ks_low.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+<td><img src="/img/post/cs184-hw4/p4_ks_high.png" srcset="/img/loading.gif" lazyload width="480" /></td>
+</tr>
+</tbody>
+</table>
+<p>With low <code>ks</code>, the cloth is very flexible and collapses into many small wrinkles and folds. With high <code>ks</code>, the cloth is stiff and resists folding, resulting in larger, smoother curves with fewer folds.</p>
+<h2 id="Part-5-Shaders">Part 5: Shaders</h2>
+<h3 id="Shader-programs">Shader programs</h3>
+<p>A shader program is a pair of programs that run on the GPU to determine how geometry is rasterized and colored. The <strong>vertex shader</strong> runs per-vertex, transforming positions from model space to screen space (via model, view, and projection matrices) and passing interpolated attributes (normals, UVs, tangents) to the next stage. The <strong>fragment shader</strong> runs per-pixel (fragment), computing the final color using the interpolated attributes, lighting parameters, and textures. Together they form the rendering pipeline: vertex shader handles geometry, fragment shader handles appearance.</p>
+<h3 id="Blinn-Phong-shading-model">Blinn-Phong shading model</h3>
+<p>The Blinn-Phong model decomposes illumination into three additive components:</p>
+<ul>
+<li><strong>Ambient</strong>: a constant base illumination <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>a</mi></msub><mo>⋅</mo><msub><mi>I</mi><mi>a</mi></msub></mrow><annotation encoding="application/x-tex">k_a \cdot I_a</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.8333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0785em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span></span></span></span> that prevents surfaces from being completely black in shadow.</li>
+<li><strong>Diffuse</strong>: Lambertian reflection <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>d</mi></msub><mo>⋅</mo><mo stretchy="false">(</mo><mi>I</mi><mi mathvariant="normal">/</mi><msup><mi>r</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>⋅</mo><mi>max</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="bold">n</mi><mo>⋅</mo><mi mathvariant="bold">l</mi><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">k_d \cdot (I/r^2) \cdot \max(\mathbf{n} \cdot \mathbf{l}, 0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord mathbf">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">l</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span> that depends on the angle between surface normal and light direction.</li>
+<li><strong>Specular</strong>: a glossy highlight <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>s</mi></msub><mo>⋅</mo><mo stretchy="false">(</mo><mi>I</mi><mi mathvariant="normal">/</mi><msup><mi>r</mi><mn>2</mn></msup><mo stretchy="false">)</mo><mo>⋅</mo><mi>max</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="bold">n</mi><mo>⋅</mo><mi mathvariant="bold">h</mi><mo separator="true">,</mo><mn>0</mn><msup><mo stretchy="false">)</mo><mi>p</mi></msup></mrow><annotation encoding="application/x-tex">k_s \cdot (I/r^2) \cdot \max(\mathbf{n} \cdot \mathbf{h}, 0)^p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0641em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord mathnormal" style="margin-right:0.07847em;">I</span><span class="mord">/</span><span class="mord"><span class="mord mathnormal" style="margin-right:0.02778em;">r</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.8141em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mtight">2</span></span></span></span></span></span></span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord mathbf">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">h</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0</span><span class="mclose"><span class="mclose">)</span><span class="msupsub"><span class="vlist-t"><span class="vlist-r"><span class="vlist" style="height:0.6644em;"><span style="top:-3.063em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">p</span></span></span></span></span></span></span></span></span></span></span> using the half-vector <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">h</mi><mo>=</mo><mtext>normalize</mtext><mo stretchy="false">(</mo><mi mathvariant="bold">l</mi><mo>+</mo><mi mathvariant="bold">v</mi><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">\mathbf{h} = \text{normalize}(\mathbf{l} + \mathbf{v})</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathbf">h</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord text"><span class="mord">normalize</span></span><span class="mopen">(</span><span class="mord mathbf">l</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">+</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">v</span><span class="mclose">)</span></span></span></span>, where <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi></mrow><annotation encoding="application/x-tex">p</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span></span></span></span> controls shininess.</li>
+</ul>
+<p>In my implementation: <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>a</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k_a = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">a</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>d</mi></msub><mo>=</mo><mn>1</mn></mrow><annotation encoding="application/x-tex">k_d = 1</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3361em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">d</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">1</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi>k</mi><mi>s</mi></msub><mo>=</mo><mn>0.95</mn></mrow><annotation encoding="application/x-tex">k_s = 0.95</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.8444em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathnormal" style="margin-right:0.03148em;">k</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.0315em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">s</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">0.95</span></span></span></span>, <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>p</mi><mo>=</mo><mn>128</mn></mrow><annotation encoding="application/x-tex">p = 128</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.625em;vertical-align:-0.1944em;"></span><span class="mord mathnormal">p</span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.6444em;"></span><span class="mord">128</span></span></span></span>, with ambient color <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mo stretchy="false">(</mo><mn>0.1</mn><mo separator="true">,</mo><mn>0.1</mn><mo separator="true">,</mo><mn>0.1</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">(0.1, 0.1, 0.1)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mopen">(</span><span class="mord">0.1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.1</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0.1</span><span class="mclose">)</span></span></span></span>.</p>
+<table>
+<thead>
+<tr>
+<th>Ambient only</th>
+<th>Diffuse only</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p5_phong_ambient.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+<td><img src="/img/post/cs184-hw4/p5_phong_diffuse.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+</tr>
+<tr>
+<td>Specular only</td>
+<td>Full Blinn-Phong</td>
+</tr>
+<tr>
+<td><img src="/img/post/cs184-hw4/p5_phong_specular.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+<td><img src="/img/post/cs184-hw4/p5_phong_full.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="Texture-mapping">Texture mapping</h3>
+<table>
+<thead>
+<tr>
+<th>Custom texture mapping</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p5_texture.png" srcset="/img/loading.gif" lazyload width="600" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="Bump-mapping-vs-displacement-mapping">Bump mapping vs. displacement mapping</h3>
+<p>Bump mapping perturbs the surface normal in the fragment shader without changing the geometry. It samples a height map to compute local derivatives <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>U</mi></mrow><annotation encoding="application/x-tex">dU</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.10903em;">U</span></span></span></span> and <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>d</mi><mi>V</mi></mrow><annotation encoding="application/x-tex">dV</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathnormal">d</span><span class="mord mathnormal" style="margin-right:0.22222em;">V</span></span></span></span>, constructs a displaced normal in tangent space via TBN matrix, then uses this perturbed normal for Phong lighting. The surface appears bumpy but the silhouette remains smooth.</p>
+<p>Displacement mapping does the same normal perturbation in the fragment shader, but additionally modifies the vertex positions in the vertex shader: each vertex is displaced along its normal by <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi>h</mi><mo stretchy="false">(</mo><mtext>uv</mtext><mo stretchy="false">)</mo><mo>⋅</mo><mtext>height_scaling</mtext></mrow><annotation encoding="application/x-tex">h(\text{uv}) \cdot \text{height\_scaling}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathnormal">h</span><span class="mopen">(</span><span class="mord text"><span class="mord">uv</span></span><span class="mclose">)</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1.0044em;vertical-align:-0.31em;"></span><span class="mord text"><span class="mord">height_scaling</span></span></span></span></span>. This physically changes the geometry, so bumps appear in the silhouette too.</p>
+<table>
+<thead>
+<tr>
+<th>Bump mapping on cloth</th>
+<th>Bump mapping on sphere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423223345.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423223543.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+</tr>
+</tbody>
+</table>
+<table>
+<thead>
+<tr>
+<th>Displacement mapping on sphere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423223841.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+</tr>
+</tbody>
+</table>
+<p>Comparing the two: bump mapping gives a convincing illusion of surface detail but breaks down at silhouettes or grazing angles where the smooth geometry is visible. Displacement mapping produces genuinely altered geometry that holds up from all viewing angles, but requires denser tessellation to look good.</p>
+<h4 id="Effect-of-sphere-coarseness">Effect of sphere coarseness</h4>
+<table>
+<thead>
+<tr>
+<th>Bump mapping, -o 16 -a 16</th>
+<th>Bump mapping, -o 128 -a 128</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423224059.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423224206.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+</tr>
+<tr>
+<td>Displacement mapping, -o 16 -a 16</td>
+<td>Displacement mapping, -o 128 -a 128</td>
+</tr>
+<tr>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423224346.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+<td><img src="https://cdn.jsdelivr.net/gh/zaddle55/Picgo@main/images/20260423224439.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+</tr>
+</tbody>
+</table>
+<p>At low resolution (<code>-o 16 -a 16</code>), bump mapping still looks reasonable because the shading illusion doesn’t depend on mesh density. Displacement mapping at the same resolution looks blocky and jagged because there aren’t enough vertices to displace. At high resolution (<code>-o 128 -a 128</code>), displacement mapping catches up and looks much better — the displaced surface has fine detail matching the height map. Bump mapping looks essentially the same at both resolutions since it only perturbs normals.</p>
+<h3 id="Mirror-shader">Mirror shader</h3>
+<p>The mirror shader computes the reflection direction <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><msub><mi mathvariant="bold">w</mi><mi>i</mi></msub><mo>=</mo><msub><mi mathvariant="bold">w</mi><mi>o</mi></msub><mo>−</mo><mn>2</mn><mo stretchy="false">(</mo><msub><mi mathvariant="bold">w</mi><mi>o</mi></msub><mo>⋅</mo><mi mathvariant="bold">n</mi><mo stretchy="false">)</mo><mi mathvariant="bold">n</mi></mrow><annotation encoding="application/x-tex">\mathbf{w}_i = \mathbf{w}_o - 2(\mathbf{w}_o \cdot \mathbf{n})\mathbf{n}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.5944em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.3117em;"><span style="top:-2.55em;margin-left:-0.016em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">i</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2778em;"></span><span class="mrel">=</span><span class="mspace" style="margin-right:0.2778em;"></span></span><span class="base"><span class="strut" style="height:0.7333em;vertical-align:-0.15em;"></span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.016em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord">2</span><span class="mopen">(</span><span class="mord"><span class="mord mathbf" style="margin-right:0.01597em;">w</span><span class="msupsub"><span class="vlist-t vlist-t2"><span class="vlist-r"><span class="vlist" style="height:0.1514em;"><span style="top:-2.55em;margin-left:-0.016em;margin-right:0.05em;"><span class="pstrut" style="height:2.7em;"></span><span class="sizing reset-size6 size3 mtight"><span class="mord mathnormal mtight">o</span></span></span></span><span class="vlist-s">​</span></span><span class="vlist-r"><span class="vlist" style="height:0.15em;"><span></span></span></span></span></span></span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf">n</span><span class="mclose">)</span><span class="mord mathbf">n</span></span></span></span> and samples the environment cubemap along that direction.</p>
+<table>
+<thead>
+<tr>
+<th>Mirror shader on cloth</th>
+<th>Mirror shader on sphere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p5_mirror_cloth.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+<td><img src="/img/post/cs184-hw4/p5_mirror_sphere.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+</tr>
+</tbody>
+</table>
+<h3 id="Custom-shader-Toon-Cel-shading">Custom shader: Toon / Cel shading</h3>
+<p>For my custom shader I implemented a toon (cel) shader that replaces smooth Blinn-Phong gradients with discrete lighting bands and adds silhouette-like edge darkening. The shader has three components:</p>
+<ol>
+<li>
+<p><strong>3-band diffuse ramp with shadow tint.</strong> I quantize the standard Lambertian <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mi mathvariant="bold">n</mi><mo>⋅</mo><mi mathvariant="bold">l</mi></mrow><annotation encoding="application/x-tex">\mathbf{n} \cdot \mathbf{l}</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.4445em;"></span><span class="mord mathbf">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:0.6944em;"></span><span class="mord mathbf">l</span></span></span></span> value into three discrete bands using <code>smoothstep</code> with narrow transition widths (~0.02) to avoid aliasing. Each band has its own color: the shadow band uses a cool blue-purple tint (<code>vec3(0.15, 0.10, 0.25)</code>) blended with the base color, the midtone interpolates between shadow and base, and the lit band is the pure base color. This warm-light/cool-shadow contrast is a common technique in stylized rendering.</p>
+</li>
+<li>
+<p><strong>Hard specular highlight.</strong> Instead of a smooth Phong specular falloff, I apply <code>step(0.95, pow(N \cdot H, 64))</code> to produce a binary white dot, mimicking the sharp highlights seen in anime-style shading.</p>
+</li>
+<li>
+<p><strong>Fresnel-based edge darkening.</strong> I compute a rim factor <span class="katex"><span class="katex-mathml"><math xmlns="http://www.w3.org/1998/Math/MathML"><semantics><mrow><mn>1</mn><mo>−</mo><mi>max</mi><mo>⁡</mo><mo stretchy="false">(</mo><mi mathvariant="bold">n</mi><mo>⋅</mo><mi mathvariant="bold">v</mi><mo separator="true">,</mo><mn>0</mn><mo stretchy="false">)</mo></mrow><annotation encoding="application/x-tex">1 - \max(\mathbf{n} \cdot \mathbf{v}, 0)</annotation></semantics></math></span><span class="katex-html" aria-hidden="true"><span class="base"><span class="strut" style="height:0.7278em;vertical-align:-0.0833em;"></span><span class="mord">1</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">−</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mop">max</span><span class="mopen">(</span><span class="mord mathbf">n</span><span class="mspace" style="margin-right:0.2222em;"></span><span class="mbin">⋅</span><span class="mspace" style="margin-right:0.2222em;"></span></span><span class="base"><span class="strut" style="height:1em;vertical-align:-0.25em;"></span><span class="mord mathbf" style="margin-right:0.01597em;">v</span><span class="mpunct">,</span><span class="mspace" style="margin-right:0.1667em;"></span><span class="mord">0</span><span class="mclose">)</span></span></span></span> and use it to darken fragments where the surface normal faces away from the camera. This produces outline-like silhouettes without requiring a multi-pass approach or screen-space post-processing.</p>
+</li>
+</ol>
+<table>
+<thead>
+<tr>
+<th>Toon shader on cloth</th>
+<th>Toon shader on sphere</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><img src="/img/post/cs184-hw4/p5_custom_cloth.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+<td><img src="/img/post/cs184-hw4/p5_custom_sphere.png" srcset="/img/loading.gif" lazyload width="400" /></td>
+</tr>
+</tbody>
+</table>
+
+                
+              </div>
+            
+            <hr/>
+            <div>
+              <div class="post-metas my-3">
+  
+    <div class="post-meta mr-3 d-flex align-items-center">
+      <i class="iconfont icon-category"></i>
+      
+
+<span class="category-chains">
+  
+  
+    
+      <span class="category-chain">
+        
+  <a href="/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/" class="category-chain-item">计算机图形学</a>
+  
+  
+
+      </span>
+    
+  
+</span>
+
+    </div>
+  
+  
+    <div class="post-meta">
+      <i class="iconfont icon-tags"></i>
+      
+        <a href="/tags/UCB/" class="print-no-link">#UCB</a>
+      
+        <a href="/tags/Computer-Graphics/" class="print-no-link">#Computer Graphics</a>
+      
+        <a href="/tags/Cloth-Simulation/" class="print-no-link">#Cloth Simulation</a>
+      
+        <a href="/tags/Shaders/" class="print-no-link">#Shaders</a>
+      
+    </div>
+  
+</div>
+
+
+              
+  
+
+  <div class="license-box my-3">
+    <div class="license-title">
+      <div>CS184 Homework 4 -- Cloth Sim</div>
+      <div>http://zaddle55.github.io/2026/04/21/cs184-hw4/</div>
+    </div>
+    <div class="license-meta">
+      
+        <div class="license-meta-item">
+          <div>作者</div>
+          <div>Dantes Chen</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>发布于</div>
+          <div>2026年4月22日</div>
+        </div>
+      
+      
+        <div class="license-meta-item license-meta-date">
+          <div>更新于</div>
+          <div>2026年4月24日</div>
+        </div>
+      
+      
+        <div class="license-meta-item">
+          <div>许可协议</div>
+          <div>
+            
+              
+              
+                <a class="print-no-link" target="_blank" href="https://creativecommons.org/licenses/by/4.0/">
+                  <span class="hint--top hint--rounded" aria-label="BY - 署名">
+                    <i class="iconfont icon-by"></i>
+                  </span>
+                </a>
+              
+            
+          </div>
+        </div>
+      
+    </div>
+    <div class="license-icon iconfont"></div>
+  </div>
+
+
+
+              
+                <div class="post-prevnext my-3">
+                  <article class="post-prev col-6">
+                    
+                    
+                  </article>
+                  <article class="post-next col-6">
+                    
+                    
+                      <a href="/2026/04/04/megablocks/" title="Stanford: MegaBlocks -- Efficient Sparse Training with Mixture-of-Experts">
+                        <span class="hidden-mobile">Stanford: MegaBlocks -- Efficient Sparse Training with Mixture-of-Experts</span>
+                        <span class="visible-mobile">下一篇</span>
+                        <i class="iconfont icon-arrowright"></i>
+                      </a>
+                    
+                  </article>
+                </div>
+              
+            </div>
+
+            
+  
+  
+    <article id="comments" lazyload>
+      
+  <div id="waline"></div>
+  <script type="text/javascript">
+    Fluid.utils.loadComments('#waline', function() {
+      Fluid.utils.createCssLink('https://cdn.bootcdn.net/ajax/libs/waline/2.15.5/waline.min.css')
+      Fluid.utils.createScript('https://cdn.bootcdn.net/ajax/libs/waline/2.15.5/waline.min.js', function() {
+        var options = Object.assign(
+          {"serverURL":"waline-git-main-zaddle55s-projects.vercel.app","path":"window.location.pathname","meta":["nick","mail","link"],"requiredMeta":["nick"],"lang":"zh-CN","emoji":["https://cdn.jsdelivr.net/gh/walinejs/emojis/tw-emoji"],"dark":"html[data-user-color-scheme=\"dark\"]","wordLimit":0,"pageSize":10},
+          {
+            el: '#waline',
+            path: window.location.pathname
+          }
+        )
+        Waline.init(options);
+        Fluid.utils.waitElementVisible('#waline .vcontent', () => {
+          var imgSelector = '#waline .vcontent img:not(.vemoji)';
+          Fluid.plugins.imageCaption(imgSelector);
+          Fluid.plugins.fancyBox(imgSelector);
+        })
+      });
+    });
+  </script>
+  <noscript>Please enable JavaScript to view the comments</noscript>
+
+
+    </article>
+  
+
+
+          </article>
+        </div>
+      </div>
+    </div>
+
+    <div class="side-col d-none d-lg-block col-lg-2">
+      
+  <aside class="sidebar" style="margin-left: -1rem">
+    <div id="toc">
+  <p class="toc-header">
+    <i class="iconfont icon-list"></i>
+    <span>目录</span>
+  </p>
+  <div class="toc-body" id="toc-body"></div>
+</div>
+
+
+
+  </aside>
+
+
+    </div>
+  </div>
+</div>
+
+
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+
+  
+
+
+  
+  
+
+
+
+
+
+
+
+
+    
+
+    
+      <a id="scroll-top-button" aria-label="TOP" href="#" role="button">
+        <i class="iconfont icon-arrowup" aria-hidden="true"></i>
+      </a>
+    
+
+    
+      <div class="modal fade" id="modalSearch" tabindex="-1" role="dialog" aria-labelledby="ModalLabel"
+     aria-hidden="true">
+  <div class="modal-dialog modal-dialog-scrollable modal-lg" role="document">
+    <div class="modal-content">
+      <div class="modal-header text-center">
+        <h4 class="modal-title w-100 font-weight-bold">搜索</h4>
+        <button type="button" id="local-search-close" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body mx-3">
+        <div class="md-form mb-5">
+          <input type="text" id="local-search-input" class="form-control validate">
+          <label data-error="x" data-success="v" for="local-search-input">关键词</label>
+        </div>
+        <div class="list-group" id="local-search-result"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+    
+
+    
+  </main>
+
+  <footer>
+    <div class="footer-inner">
+  
+    <div class="footer-content">
+       <a href="https://hexo.io" target="_blank" rel="nofollow noopener"><span>Hexo</span></a> <i class="iconfont icon-love"></i> <a href="https://github.com/fluid-dev/hexo-theme-fluid" target="_blank" rel="nofollow noopener"><span>Fluid</span></a> <br></br> <div> <span id="timeDate">载入天数...</span> <span id="times">载入时分秒...</span> <script src="/js/duration.js"></script> </div> 
+    </div>
+  
+  
+  
+  
+</div>
+
+  </footer>
+
+  <!-- Scripts -->
+  
+  <script  src="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.js" ></script>
+  <link  rel="stylesheet" href="https://lib.baomitu.com/nprogress/0.2.0/nprogress.min.css" />
+
+  <script>
+    NProgress.configure({"showSpinner":false,"trickleSpeed":100})
+    NProgress.start()
+    window.addEventListener('load', function() {
+      NProgress.done();
+    })
+  </script>
+
+
+<script  src="https://lib.baomitu.com/jquery/3.6.4/jquery.min.js" ></script>
+<script  src="https://lib.baomitu.com/twitter-bootstrap/4.6.1/js/bootstrap.min.js" ></script>
+<script  src="/js/events.js" ></script>
+<script  src="/js/plugins.js" ></script>
+
+
+  <script  src="https://lib.baomitu.com/typed.js/2.0.12/typed.min.js" ></script>
+  <script>
+    (function (window, document) {
+      var typing = Fluid.plugins.typing;
+      var subtitle = document.getElementById('subtitle');
+      if (!subtitle || !typing) {
+        return;
+      }
+      var text = subtitle.getAttribute('data-typed-text');
+      
+        typing(text);
+      
+    })(window, document);
+  </script>
+
+
+
+
+  
+    <script  src="/js/img-lazyload.js" ></script>
+  
+
+
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/tocbot/4.20.1/tocbot.min.js', function() {
+    var toc = jQuery('#toc');
+    if (toc.length === 0 || !window.tocbot) { return; }
+    var boardCtn = jQuery('#board-ctn');
+    var boardTop = boardCtn.offset().top;
+
+    window.tocbot.init(Object.assign({
+      tocSelector     : '#toc-body',
+      contentSelector : '.markdown-body',
+      linkClass       : 'tocbot-link',
+      activeLinkClass : 'tocbot-active-link',
+      listClass       : 'tocbot-list',
+      isCollapsedClass: 'tocbot-is-collapsed',
+      collapsibleClass: 'tocbot-is-collapsible',
+      scrollSmooth    : true,
+      includeTitleTags: true,
+      headingsOffset  : -boardTop,
+    }, CONFIG.toc));
+    if (toc.find('.toc-list-item').length > 0) {
+      toc.css('visibility', 'visible');
+    }
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('tocbot' in window) {
+        tocbot.refresh();
+        var toc = jQuery('#toc');
+        if (toc.length === 0 || !tocbot) {
+          return;
+        }
+        if (toc.find('.toc-list-item').length > 0) {
+          toc.css('visibility', 'visible');
+        }
+      }
+    });
+  });
+</script>
+
+
+  <script src=https://lib.baomitu.com/clipboard.js/2.0.11/clipboard.min.js></script>
+
+  <script>Fluid.plugins.codeWidget();</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/anchor-js/4.3.1/anchor.min.js', function() {
+    window.anchors.options = {
+      placement: CONFIG.anchorjs.placement,
+      visible  : CONFIG.anchorjs.visible
+    };
+    if (CONFIG.anchorjs.icon) {
+      window.anchors.options.icon = CONFIG.anchorjs.icon;
+    }
+    var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+    var res = [];
+    for (var item of el) {
+      res.push('.markdown-body > ' + item.trim());
+    }
+    if (CONFIG.anchorjs.placement === 'left') {
+      window.anchors.options.class = 'anchorjs-link-left';
+    }
+    window.anchors.add(res.join(', '));
+
+    Fluid.events.registerRefreshCallback(function() {
+      if ('anchors' in window) {
+        anchors.removeAll();
+        var el = (CONFIG.anchorjs.element || 'h1,h2,h3,h4,h5,h6').split(',');
+        var res = [];
+        for (var item of el) {
+          res.push('.markdown-body > ' + item.trim());
+        }
+        if (CONFIG.anchorjs.placement === 'left') {
+          anchors.options.class = 'anchorjs-link-left';
+        }
+        anchors.add(res.join(', '));
+      }
+    });
+  });
+</script>
+
+
+  
+<script>
+  Fluid.utils.createScript('https://lib.baomitu.com/fancybox/3.5.7/jquery.fancybox.min.js', function() {
+    Fluid.plugins.fancyBox();
+  });
+</script>
+
+
+  <script>Fluid.plugins.imageCaption();</script>
+
+  <script  src="/js/local-search.js" ></script>
+
+  <script defer src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js" ></script>
+
+
+
+
+  
+<script src="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/snowflake.min.js"></script>
+<script src="//cdn.jsdelivr.net/gh/EmoryHuang/BlogBeautify@1.1/star.min.js"></script>
+<script src="//static.kevinchu.top/blog/assets/js/typing-effect.js"></script>
+
+
+
+<!-- 主题的启动项，将它保持在最底部 -->
+<!-- the boot of the theme, keep it at the bottom -->
+<script  src="/js/boot.js" ></script>
+
+
+  <script>window.HEXO_PLAYGROUND_CONFIG={"assetRoot":"/playground-assets","executeUrl":"https://hexo-playground-api-plugin-production.up.railway.app/api/playground/v1/execute","editor":"codemirror","provider":"rust-playground","enabledLanguages":["rust"],"editorTheme":"dark","policy":{"timeoutMs":8000,"maxCodeBytes":65536,"maxOutputBytes":16384,"network":"disabled","truncateHeadBytes":12288,"truncateTailBytes":4096}};</script><script src="/playground-assets/vendor/codemirror/codemirror.js" defer></script><script src="/playground-assets/vendor/codemirror/addon/mode/simple.js" defer></script><script src="/playground-assets/vendor/codemirror/mode/rust.js" defer></script><script src="/playground-assets/playground.js" defer></script>
+
+  <noscript>
+    <div class="noscript-warning">博客在允许 JavaScript 运行的环境下浏览效果更佳</div>
+  </noscript>
+</body>
+</html>
