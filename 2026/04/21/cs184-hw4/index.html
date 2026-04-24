@@ -16,16 +16,16 @@
   <meta name="author" content="Dantes Chen">
   <meta name="keywords" content="">
   
-    <meta name="description" content="Link to webpage: zaddle.top&#x2F;2026&#x2F;04&#x2F;21&#x2F;cs184-hw4&#x2F; Link to GitHub repository: zaddle55&#x2F;zaddle55.github.io Overview In this homework I implemented a real-time cloth simulation system. The pipeline start">
+    <meta name="description" content="Names: Dantes Chen Link to webpage: zaddle.top&#x2F;2026&#x2F;04&#x2F;21&#x2F;cs184-hw4&#x2F; Link to GitHub repository: zaddle55&#x2F;zaddle55.github.io Recommend to read the post on the website for better formatting and image di">
 <meta property="og:type" content="article">
 <meta property="og:title" content="CS184 Homework 4 -- Cloth Sim">
 <meta property="og:url" content="http://zaddle55.github.io/2026/04/21/cs184-hw4/index.html">
 <meta property="og:site_name" content="南十字星站">
-<meta property="og:description" content="Link to webpage: zaddle.top&#x2F;2026&#x2F;04&#x2F;21&#x2F;cs184-hw4&#x2F; Link to GitHub repository: zaddle55&#x2F;zaddle55.github.io Overview In this homework I implemented a real-time cloth simulation system. The pipeline start">
+<meta property="og:description" content="Names: Dantes Chen Link to webpage: zaddle.top&#x2F;2026&#x2F;04&#x2F;21&#x2F;cs184-hw4&#x2F; Link to GitHub repository: zaddle55&#x2F;zaddle55.github.io Recommend to read the post on the website for better formatting and image di">
 <meta property="og:locale" content="zh_CN">
 <meta property="og:image" content="http://zaddle55.github.io/img/post/clothsim.png">
 <meta property="article:published_time" content="2026-04-22T06:24:16.000Z">
-<meta property="article:modified_time" content="2026-04-24T06:18:00.519Z">
+<meta property="article:modified_time" content="2026-04-24T07:44:52.804Z">
 <meta property="article:author" content="Zaddle">
 <meta property="article:tag" content="UCB">
 <meta property="article:tag" content="Computer Graphics">
@@ -234,7 +234,7 @@
       <span class="post-meta mr-2">
         <i class="iconfont icon-chart"></i>
         
-          854 字
+          856 字
         
       </span>
     
@@ -364,8 +364,10 @@
             
               <div class="markdown-body">
                 
-                <p>Link to webpage: <a target="_blank" rel="noopener" href="https://zaddle.top/2026/04/21/cs184-hw4/">zaddle.top/2026/04/21/cs184-hw4/</a><br>
+                <p><strong>Names: Dantes Chen</strong></p>
+<p>Link to webpage: <a target="_blank" rel="noopener" href="https://zaddle.top/2026/04/21/cs184-hw4/">zaddle.top/2026/04/21/cs184-hw4/</a><br>
 Link to GitHub repository: <a target="_blank" rel="noopener" href="https://github.com/zaddle55/zaddle55.github.io">zaddle55/zaddle55.github.io</a></p>
+<p>Recommend to read the post on the <a target="_blank" rel="noopener" href="https://zaddle.top/2026/04/21/cs184-hw4/">website</a> for better formatting and image display!</p>
 <h2 id="Overview">Overview</h2>
 <p>In this homework I implemented a real-time cloth simulation system. The pipeline starts by building a grid of point masses connected by structural, shearing, and bending springs (Part 1). Physics simulation is driven by Verlet integration with external forces (gravity) and internal spring correction forces, plus a deformation constraint that limits spring stretch to 10% per timestep (Part 2). Collision handling against spheres and planes keeps the cloth from passing through objects (Part 3), while spatial hashing enables efficient self-collision detection so the cloth folds naturally onto itself (Part 4). Finally, I implemented several GLSL shaders — Blinn-Phong, texture mapping, bump/displacement mapping, and environment-mapped mirror reflection (Part 5).</p>
 <p>The most interesting takeaway was seeing how a few simple rules (Hooke’s law springs, Verlet integration, spatial hash collision) combine to produce visually convincing cloth behavior. Tuning parameters like <code>ks</code>, density, and damping reveals a rich space of cloth “materials” from silk to burlap.</p>

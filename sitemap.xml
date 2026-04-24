@@ -47,7 +47,7 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/2024/03/30/post/</loc>
+    <loc>http://zaddle55.github.io/2025/07/12/mml-4/</loc>
     
     <lastmod>2025-07-12</lastmod>
     
@@ -56,7 +56,7 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/2025/07/12/mml-4/</loc>
+    <loc>http://zaddle55.github.io/2024/03/30/post/</loc>
     
     <lastmod>2025-07-12</lastmod>
     
@@ -83,7 +83,7 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/2025/07/12/hello-world/</loc>
+    <loc>http://zaddle55.github.io/2024/04/07/GobangAI-md/</loc>
     
     <lastmod>2025-07-12</lastmod>
     
@@ -92,7 +92,7 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/2024/04/07/GobangAI-md/</loc>
+    <loc>http://zaddle55.github.io/2025/07/12/hello-world/</loc>
     
     <lastmod>2025-07-12</lastmod>
     
@@ -216,20 +216,6 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/tags/MoE/</loc>
-    <lastmod>2026-04-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
-    <loc>http://zaddle55.github.io/tags/Sparse-Training/</loc>
-    <lastmod>2026-04-24</lastmod>
-    <changefreq>weekly</changefreq>
-    <priority>0.2</priority>
-  </url>
-  
-  <url>
     <loc>http://zaddle55.github.io/tags/%E6%B7%B1%E5%BA%A6%E4%BC%98%E5%85%88%E6%90%9C%E7%B4%A2/</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
@@ -280,6 +266,20 @@
   
   <url>
     <loc>http://zaddle55.github.io/tags/Ray-Tracing/</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://zaddle55.github.io/tags/MoE/</loc>
+    <lastmod>2026-04-24</lastmod>
+    <changefreq>weekly</changefreq>
+    <priority>0.2</priority>
+  </url>
+  
+  <url>
+    <loc>http://zaddle55.github.io/tags/Sparse-Training/</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
@@ -344,14 +344,14 @@
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/categories/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/</loc>
+    <loc>http://zaddle55.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
   </url>
   
   <url>
-    <loc>http://zaddle55.github.io/categories/%E8%AE%A1%E7%AE%97%E6%9C%BA%E5%9B%BE%E5%BD%A2%E5%AD%A6/</loc>
+    <loc>http://zaddle55.github.io/categories/%E8%AE%BA%E6%96%87%E7%A0%94%E8%AF%BB/</loc>
     <lastmod>2026-04-24</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.2</priority>
